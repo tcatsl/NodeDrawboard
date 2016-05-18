@@ -26,12 +26,18 @@
 		
 		<script src="/socket.io/socket.io.js"></script>
 		<script> var socket = io(); </script>
-		<script src = "assets/scripts/chat.js"></script>
+		<script src = "assets/scripts/drawboard.js"></script>
 		<script>
 			socket.on("chat_message", function(message) {
 				appendMessage(message);
 			});
+			setTimeout(function() {
+    var headID = document.getElementsByTagName("head")[0];         
+    var newScript = document.createElement('script');
+    newScript.type = 'text/javascript';
+    newScript.src = 'assets/scripts/chat.js';
+    headID.appendChild(newScript);
+}, 10);
 		</script>
-		<script src = "assets/scripts/drawboard.js"></script>
 	</body>
 </html>
