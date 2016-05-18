@@ -1,3 +1,9 @@
+		  	var r = Math.round(Math.random() * 255);
+      	var g = Math.round(Math.random() * 255);
+      	
+      	var b = Math.round(Math.random() * 255);
+		var cl = 'rgb('+r+','+g+','+b+')';
+
 document.addEventListener("DOMContentLoaded", function() {
 	var mouse = {
 		click: false,
@@ -13,7 +19,8 @@ document.addEventListener("DOMContentLoaded", function() {
 	var context = canvas.getContext("2d");
 	var width = canvas.width;
 	var height = canvas.height;
-	
+
+
 	canvas.onmousedown = function(e) {
 		mouse.click = true;
 	};
@@ -32,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		var line = data.line;
 		context.beginPath();
 		context.lineWidth = 2;
+		context.strokeStyle = line[2];
 		context.moveTo(line[0].x * width, line[0].y * height);
 		context.lineTo(line[1].x * width, line[1].y * height);
 		context.stroke();
@@ -44,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	
 	function drawLoop() {
 		if (mouse.click && mouse.move && mouse.pos_prev) {
-			socket.emit("draw_line", { line: [mouse.pos, mouse.pos_prev] });
+			socket.emit("draw_line", { line: [mouse.pos, mouse.pos_prev, cl] });
 			mouse.move = false;
 		}
 		
