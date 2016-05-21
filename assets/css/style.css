@@ -3,19 +3,27 @@ html, body {
 	width: 100%;
 	margin: 0;
 	padding: 0;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 canvas {
 	float: left;
 	background: #FFFAF0;
+	position: absolute;
+	top: 0px;
+	left: 0px;
 }
 
 #chat {
 	box-sizing: border-box;
-	border: 2px solid black;
-	height: 100%;
-	overflow: hidden;
+	border: 1px solid black;
+	height: 400px;
+	width: 450px;
+	overflow: auto;
 	background: #F0F8FF;
+	position: absolute;
+	top: 0px;
+	left: 701px;
 }
 
 #chat ul {
@@ -30,12 +38,12 @@ canvas {
 #messages {
 	margin-top: 0;
 	margin-bottom: 0;
-	height: 95%;
+	height: 92%;
 }
 
 form {
 	position: relative;
-	height: 5%;
+	height: 8%;
 	width: 100%;
 }
 
@@ -60,4 +68,52 @@ form {
 	height: 100%;
 	background: #0E4C95;
 	color: white;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.player
+{
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  z-index: +3;
+}
+#slider-1{
+ margin-left: 20px;
+ margin-right: 20px;
+ position: absolute;
+ top: 450px;
+ left: 720px;
+}
+
+#slider-2{
+ margin-left: 20px;
+ margin-right: 20px;
+ position: absolute;
+ top: 450px;
+ left: 760px;
+} 
+
+#slider-3{
+ margin-left: 20px;
+ margin-right: 20px;
+ position: absolute;
+ top: 450px;
+ left: 800px;
+}
+
+#slider-4{
+ margin-left: 20px;
+ margin-right: 20px;
+ position: absolute;
+ top: 450px;
+ left: 840px; 
+}
+#myCanvas2{
+ position: absolute;
+ top: 450px;
+ left: 890px; 
 }
