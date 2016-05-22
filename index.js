@@ -40,12 +40,12 @@ draw.on("connection", function(socket) {
 		var randomClient; 
 		if (drawHistory.length >= 3000 && draw_players.length > 0) {
 			randomClient = Math.floor(Math.random() * draw_players.length);
-			draw_players[randomClient].emit("get_image"); console.log("calling for image"); 
+			draw_players[randomClient].emit("get_image"); console.log("calling for image"); drawHistory = []; 
 			}
 		}, 30000); 
 
 	socket.on("send_image", function(dataURL) {
-		image = dataURL; console.log("image recieved"); drawHistory = [] });
+		image = dataURL; console.log("image recieved");});
 	
 	socket.on('disconnect', function(){
     	console.log('client disconnected from /draw');
