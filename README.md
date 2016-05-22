@@ -5,5 +5,5 @@ A collaborative drawing board where users can share ideas, chat or just have fun
 <ol>
 <li>Install Node.js</li>
 <li>Navigate to project directory and run "npm install" in order to install dependencies</li>
-<li>Run index.js using Node. Optional command line argument should be the port on which the server will run (Default: 3000) </li>
+<li>Run index.js using Node. Optional command line argument should be the port on which the server will run (Default: 3331) </li>
 </ol>
