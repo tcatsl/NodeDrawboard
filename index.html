@@ -30,56 +30,28 @@
 <div id="slider-4" style="height: 150px;"></div>
 <canvas id="myCanvas2" width="150" height="150"style="border:1px solid #000000;">
 </canvas></div>
+<form id="styles">
+<INPUT TYPE=RADIO NAME="style" VALUE="square">square</INPUT><BR> 
+<INPUT TYPE=RADIO NAME="style" VALUE="round" checked="checked">round</INPUT><BR> 
+<INPUT TYPE=RADIO NAME="style" VALUE="butt">butt
+</INPUT></form>
 		<script src="/socket.io/socket.io.js"></script>
 		  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
   <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
   <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 		<script> var socket = io('/draw'); </script>
 <script>
+var style = $("input[name=style]:checked", "#styles").val();
+$('#styles input').on('change', function() {style = $('input[name=style]:checked', '#styles').val();
+});
 var dwidth = 2
 var name = 'User' + Math.round(Math.random() * 255);
 var r = Math.round(Math.random() * 255);
 var g = Math.round(Math.random() * 255);
 var b = Math.round(Math.random() * 255);
 var cl = 'rgb('+r+','+g+','+b+')';
-
-if(name == '') name = 'Anonymous';
-var pl = 
-{
-  id: 0,
-  name: name,
-  color: cl,
-  x: 0,
-  y: 0
-};
- 
-var socket2 = io('/mousetrack');
- 
-socket2.on('connect', function () {
-  socket2.emit('client_connected', pl);
-});
-$('body').mousemove(function(event){
-  var pos = {
-    x: event.pageX + 2,
-    y: event.pageY + 2,
-  	color: cl
-  };
-  socket2.emit('update_coords', pos);
-});
-
-socket2.on('send_data', function(data){
-  var i=0;
-  $('#zone').html('');
-  while(i < data.length)
-  {
-    var me = '';
-    if( data[i].id == pl.id ) me = 'You';
-    player = '<div class="player" id="p_' + data[i].id + '" style="background: ' + data[i].color + '	;left:' + data[i].x + 'px;top:' + data[i].y +'px"> ' + me + '</div>';
-    $('#zone').append(player);
-    i++;
-  }
-});
 </script>		
+<script src="assets/scripts/mousetrack.js"></script>
 		<script>
 			socket.on("chat_message", function(message) {
 				appendMessage(message);
@@ -94,162 +66,9 @@ socket2.on('send_data', function(data){
 
 		</script>
 		
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-	var mouse = {
-		click: false,
-		move: false,
-		pos: {x:0, y:0},
-		pos_prev: false
-	}
-	
-	var canvas = document.getElementById("drawboard");
-	var chatBox = document.getElementById("chat");
-	canvas.width = 700;
-	canvas.height = 550;
-	var context = canvas.getContext("2d");
-
-	canvas.onmousedown = function(e) {
-		mouse.click = true;
-	};
-	
-	canvas.onmouseup = function(e) {
-		mouse.click = false;
-	};
-	
-	canvas.onmousemove = function(e) {
-		mouse.pos.x = e.pageX;
-		mouse.pos.y = e.pageY;
-		mouse.move = true;
-	};
-	socket.on("get_image", function() {
-		// get the dataURL in .png format
-		var dataURL = document.getElementById("drawboard").toDataURL();
-		socket.emit("send_image", dataURL)
-	});
-
-	socket.on("image", function(image){
-		var img=new Image();	
-		img.onload=start;
-		img.src=image;
-			function start(){
-    		context.drawImage(img,0,0)
-    		};
-    	socket.emit("image_recieved"); 
-    	});
-
-	socket.on("draw_line", function(data) {
-		var line = data.line;
-		context.beginPath();
-		context.lineCap = "round";
-		context.lineJoin = "round";
-		context.lineWidth = line[3];
-		context.strokeStyle = line[2];
-		context.moveTo(line[0].x, line[0].y);
-		context.lineTo(line[1].x, line[1].y);
-		context.stroke();
-	});
-	
-	
-	function drawLoop() {
-		if (mouse.click && mouse.move && mouse.pos_prev) {
-			socket.emit("draw_line", { line: [mouse.pos, mouse.pos_prev, cl, dwidth] });
-			mouse.move = false;
-		}
-		
-		mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};
-		setTimeout(drawLoop, 25);
-	}
-	
-	drawLoop();
-	context.fillStyle = 'rgb(255,255,255)';
-   	context.beginPath();
-   	context.fillRect(0, 0, drawboard.width, drawboard.height);;
-   	context.closePath();
-   	context.fill();
-});
+<script src='assets/scripts/drawboard.js'>
 </script>
-<script>
-
-function drawOnCanvas () {
-   var rgb =[
-       $('#slider-1').slider("value"),
-       $('#slider-2').slider("value"),
-       $('#slider-3').slider("value")
-   ];
-   var c = document.getElementById("myCanvas2");
-   var ctx = c.getContext("2d");
-   var color = "rgb("+ rgb.join(',') + ")" ;
-   ctx.fillStyle = color
-   ctx.beginPath();
-   ctx.fillRect(0, 0, myCanvas2.width, myCanvas2.height);;
-   ctx.closePath();
-   ctx.fill();
-}
-
-function createSlider1(slider) {
-   slider.slider({
-      orientation: "vertical",
-      range: "min",
-      min: 0,
-      max: 255,
-      value: r,
-      slide: function( event, ui ) {
-        drawOnCanvas();
-        r = ui.value;
-        cl = 'rgb('+r+','+g+','+b+')';
-        pl.color = cl;
-      }
-  })
-}
-function createSlider2(slider) {
-   slider.slider({
-      orientation: "vertical",
-      range: "min",
-      min: 0,
-      max: 255,
-      value: g,
-      slide: function( event, ui ) {
-        drawOnCanvas();
-      	g = ui.value;
-      	cl = 'rgb('+r+','+g+','+b+')';
-        pl.color = cl;
-      }
-  })
-}
-function createSlider3(slider) {
-   slider.slider({
-      orientation: "vertical",
-      range: "min",
-      min: 0,
-      max: 255,
-      value: b,
-      slide: function( event, ui ) {
-        drawOnCanvas();
-        b = ui.value;
-        cl = 'rgb('+r+','+g+','+b+')';
-        pl.color = cl;
-      }
-  })
-}
-function createSlider4(slider) {
-   slider.slider({
-      orientation: "vertical",
-      range: "min",
-      min: 1,
-      max: 150,
-      value: 2,
-      slide: function( event, ui ) {
-        dwidth = ui.value;
-      }
-  })
-}
-$(function() {
-    createSlider1($( "#slider-1" ));
-    createSlider2($( "#slider-2" ));
-    createSlider3($( "#slider-3" ));
-    createSlider4($( "#slider-4" ));    
-});
+<script src='assets/scripts/sliders.js'>
 </script>
 <script> 
 document.getElementById("myCanvas2").style.backgroundColor = cl;
