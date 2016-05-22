@@ -117,3 +117,10 @@ a {
  top: 450px;
  left: 890px; 
 }
+#styles{
+ position: absolute;
+ width: 100px;
+ height: 100px;
+ top: 450px;
+ left: 1050px; 
+}
