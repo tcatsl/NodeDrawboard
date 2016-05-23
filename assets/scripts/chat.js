@@ -20,3 +20,7 @@ function sendMessage() {
 	console.log("message");
 	return false;
 } 
+function updateScroll(){
+    var element = document.getElementById("messages");
+    element.scrollTop = element.scrollHeight;
+}
