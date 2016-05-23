@@ -54,7 +54,7 @@ var cl = 'rgb('+r+','+g+','+b+')';
 <script src="assets/scripts/mousetrack.js"></script>
 		<script>
 			socket.on("chat_message", function(message) {
-				appendMessage(message);
+				appendMessage(message); updateScroll();
 			});
 			setTimeout(function() {
     var headID = document.getElementsByTagName("head")[0];         
