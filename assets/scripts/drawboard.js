@@ -105,7 +105,7 @@ document.body.addEventListener("touchmove", function (e) {
 		context.moveTo(line[0].x, line[0].y);
 		context.lineTo(line[1].x, line[1].y);
 		context.stroke();
-	} else if (String(line[4]) == "spray"){ console.log("testing");
+	} else if (String(line[4]) == "spray"){
  	var line = data.line;
 	context.lineWidth = line[3];
   var radius = context.lineWidth / 2;
