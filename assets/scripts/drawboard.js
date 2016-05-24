@@ -65,22 +65,6 @@ document.body.addEventListener("touchmove", function (e) {
   }
 }, false);
 
-document.body.addEventListener("touchstart", function (e) {
-  if (e.target == slider1) {
-    e.preventDefault();
-  }
-}, false);
-document.body.addEventListener("touchend", function (e) {
-  if (e.target == slider1) {
-    e.preventDefault();
-  }
-}, false);
-document.body.addEventListener("touchmove", function (e) {
-  if (e.target == slider1) {
-    e.preventDefault();
-  }
-}, false);
-
 function handleMouseDown(evt) {
   evt.preventDefault();
   evt.stopPropagation();
