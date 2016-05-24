@@ -33,12 +33,15 @@
 <form id="styles">
 <INPUT TYPE=RADIO NAME="style" VALUE="square">square</INPUT><BR> 
 <INPUT TYPE=RADIO NAME="style" VALUE="round" checked="checked">round</INPUT><BR> 
-<INPUT TYPE=RADIO NAME="style" VALUE="butt">butt
-</INPUT></form>
+<INPUT TYPE=RADIO NAME="style" VALUE="butt">butt</INPUT><br>
+<INPUT TYPE=RADIO NAME="style" VALUE="spray">spray</INPUT>
+</form>
 		<script src="/socket.io/socket.io.js"></script>
-		  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
-  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-  <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+		  
+<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+<script src="http://code.jquery.com/ui/1.8.17/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+<script src="assets/scripts/jquery.ui.touch-punch.min.js"></script>
 		<script> var socket = io('/draw'); </script>
 <script>
 var style = $("input[name=style]:checked", "#styles").val();
@@ -51,7 +54,6 @@ var g = Math.round(Math.random() * 255);
 var b = Math.round(Math.random() * 255);
 var cl = 'rgb('+r+','+g+','+b+')';
 </script>		
-<script src="assets/scripts/mousetrack.js"></script>
 		<script>
 			socket.on("chat_message", function(message) {
 				appendMessage(message); updateScroll();
@@ -66,10 +68,9 @@ var cl = 'rgb('+r+','+g+','+b+')';
 
 		</script>
 		
-<script src='assets/scripts/drawboard.js'>
-</script>
-<script src='assets/scripts/sliders.js'>
-</script>
+<script src='assets/scripts/drawboard.js'></script>
+<script src="assets/scripts/mousetrack.js"></script>
+<script src='assets/scripts/sliders.js'></script>
 <script> 
 document.getElementById("myCanvas2").style.backgroundColor = cl;
 </script>
