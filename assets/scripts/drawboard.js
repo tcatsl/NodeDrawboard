@@ -47,6 +47,8 @@ function getTouchPos(canvasDom, touchEvent) {
     y: touchEvent.touches[0].clientY - rect.top
   };
 }
+var stuff = document.getElementById("stuff")
+var slider1 = document.getElementById("slider-1")
 document.body.addEventListener("touchstart", function (e) {
   if (e.target == canvas) {
     e.preventDefault();
@@ -63,21 +65,35 @@ document.body.addEventListener("touchmove", function (e) {
   }
 }, false);
 
+document.body.addEventListener("touchstart", function (e) {
+  if (e.target == slider1) {
+    e.preventDefault();
+  }
+}, false);
+document.body.addEventListener("touchend", function (e) {
+  if (e.target == slider1) {
+    e.preventDefault();
+  }
+}, false);
+document.body.addEventListener("touchmove", function (e) {
+  if (e.target == slider1) {
+    e.preventDefault();
+  }
+}, false);
+
 function handleMouseDown(evt) {
   evt.preventDefault();
   evt.stopPropagation();
-
-  // you can change the cursor if you want
-  // just remember to handle the mouse up and put it back :)
-
-
-  // rest of code goes here
 }
 
-document.addEventListener('mousedown', handleMouseDown, false);
+if (window.chrome) canvas.addEventListener('mousedown', handleMouseDown, false);
+
+
 
 	canvas.onmousedown = function(e) {
 		mouse.click = true;
+		mouse.pos.x = e.pageX;
+		mouse.pos.y = e.pageY;
 	};
 	
 	canvas.onmouseup = function(e) {
@@ -90,6 +106,7 @@ document.addEventListener('mousedown', handleMouseDown, false);
 		mouse.pos.y = e.pageY;
 		mouse.move = true;
 	};
+
 	socket.on("get_image", function() {
 		// get the dataURL in .png format
 		var dataURL = document.getElementById("drawboard").toDataURL();
