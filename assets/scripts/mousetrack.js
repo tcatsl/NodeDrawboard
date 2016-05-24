@@ -7,7 +7,14 @@ var pl =
   x: 0,
   y: 0
 };
- 
+document.body.addEventListener("touchmove", function (e) {
+  var touch = e.touches[0];
+  var mouseEvent = new MouseEvent("mousemove", {
+    clientX: touch.clientX,
+    clientY: touch.clientY
+  });
+  document.body.dispatchEvent(mouseEvent);
+}, false);
 var socket2 = io('/mousetrack');
  
 socket2.on('connect', function () {
@@ -21,6 +28,8 @@ $('body').mousemove(function(event){
   };
   socket2.emit('update_coords', pos);
 });
+
+
 
 socket2.on('send_data', function(data){
   var i=0;
