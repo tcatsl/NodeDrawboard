@@ -63,6 +63,18 @@ document.body.addEventListener("touchmove", function (e) {
   }
 }, false);
 
+function handleMouseDown(evt) {
+  evt.preventDefault();
+  evt.stopPropagation();
+
+  // you can change the cursor if you want
+  // just remember to handle the mouse up and put it back :)
+
+
+  // rest of code goes here
+}
+
+document.addEventListener('mousedown', handleMouseDown, false);
 
 	canvas.onmousedown = function(e) {
 		mouse.click = true;
@@ -94,7 +106,7 @@ document.body.addEventListener("touchmove", function (e) {
     	socket.emit("image_recieved"); 
     	});
 
-	socket.on("draw_line", function(data, onEnd) {
+	socket.on("draw_line", function draw(data) {
 		var line = data.line;
 		if (String(line[4]) == "square" || String(line[4]) == "round" || String(line[4]) == "butt"){
 		context.beginPath();
