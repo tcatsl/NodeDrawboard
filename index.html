@@ -1,46 +1,53 @@
 <!DOCTYPE html>
 
 <html>
-	<head>
-		<meta charset = "UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=0.33">
-		<link rel = "stylesheet" type="text/css" href="assets/css/style.css">
-	</head>
-	
-	<body>
+  <head>
+    <meta charset = "UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.33">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+
+    <link rel = "stylesheet" type="text/css" href="assets/css/style.css">
+  </head>
+  
+  <body>
 <div id="zone"><div class="player" id="me"></div></div>
-		<canvas id="drawboard" width="100" height="200" style="border:1px solid #000000;">	
-		</canvas>
-		
-		<div id = "chat">
-			<ul id = "messages">
-			</ul>
-			<form onsubmit = "return sendMessage()" action = "">
-				<div id = "inputField">
-					<input id = "inputTextBox" autocomplete="off" autofocus/> 
-					<button> <b>Send</b> </button>
-				</div>
-			</form>
-		</div>
-		<p>
+    <canvas id="drawboard" width="100" height="200" style="border:1px solid #000000;">  
+    </canvas>
+    
+    <div id = "chat">
+      <ul id = "messages">
+      </ul>
+      <form onsubmit = "return sendMessage()" action = "">
+        <div id = "inputField">
+          <input id = "inputTextBox" autocomplete="off" autofocus/> 
+          <button> <b>Send</b> </button>
+        </div>
+      </form>
+    </div>
+    <p>
 </p>
 <div id="stuff"><div id="slider-1" style="height: 150px;"></div>
 <div id="slider-2" style="height: 150px;"></div>
 <div id="slider-3" style="height: 150px;"></div>
 <div id="slider-4" style="height: 150px;"></div>
-<canvas id="myCanvas2" width="150" height="150"style="border:1px solid #000000;">
+<canvas id="myCanvas2" width="150" height="150" style="border:1px solid #000000;">
 </canvas></div><form id="styles">
+
+<INPUT TYPE=RADIO NAME="style" VALUE="color-select">color-select</INPUT><br>
+<INPUT TYPE=RADIO NAME="style" VALUE="line">line</INPUT><BR> 
+<INPUT TYPE=RADIO NAME="style" VALUE="rectangle">rectangle</INPUT><BR> 
+<INPUT TYPE=RADIO NAME="style" VALUE="ellipse">ellipse</INPUT><BR> 
 <INPUT TYPE=RADIO NAME="style" VALUE="square">square</INPUT><BR> 
-<INPUT TYPE=RADIO NAME="style" VALUE="round" checked="checked">round</INPUT><BR> 
-<INPUT TYPE=RADIO NAME="style" VALUE="butt">butt</INPUT><br>
+<INPUT TYPE=RADIO NAME="style" VALUE="round"checked="checked">round</INPUT><BR> 
+<INPUT TYPE=RADIO NAME="style" VALUE="jagged">jagged</INPUT><br>
+<INPUT TYPE=RADIO NAME="style" VALUE="fill">fill</INPUT><br>
 <INPUT TYPE=RADIO NAME="style" VALUE="spray">spray</INPUT>
 </form>
-		<script src="/socket.io/socket.io.js"></script>
-		  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
-  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+      <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
   <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
   <script src="assets/scripts/jquery.ui.touch-punch.min.js"></script>
-		<script> var socket = io('/draw'); </script>
+    <script> var socket = io('/draw'); </script>
 <script>
 var dwidth = 2
 var name = 'User' + Math.round(Math.random() * 255);
@@ -61,7 +68,9 @@ document.body.addEventListener("touchmove", function (e) {
   var touch = e.touches[0];
   var mouseEvent = new MouseEvent("mousemove", {
     clientX: touch.clientX,
-    clientY: touch.clientY
+    clientY: touch.clientY,
+    pageX: touch.pageX,
+    pageY: touch.pageY
   });
   document.body.dispatchEvent(mouseEvent);
 }, false);
@@ -70,17 +79,29 @@ var socket2 = io('/mousetrack');
 socket2.on('connect', function () {
   socket2.emit('client_connected', pl);
 });
+var canvas;
+var rect;
+var pos;
 $('body').mousemove(function(event){
-  var pos = {
-    x: event.pageX + 2,
-    y: event.pageY + 2,
+canvas = document.getElementById("drawboard");
+rect = canvas.getBoundingClientRect();  
+pos = {
+    x: event.clientX + 2 - rect.left,
+    y: event.clientY + 2 - rect.top,
     color: cl
   };
   socket2.emit('update_coords', pos);
 });
-
-
-
+$('#drawboard').mousedown(function(event){
+canvas = document.getElementById("drawboard");
+rect = canvas.getBoundingClientRect();  
+pos = {
+    x: event.clientX + 2 - rect.left,
+    y: event.clientY + 2 - rect.top,
+    color: cl
+  };
+  socket2.emit('update_coords', pos);
+});
 socket2.on('send_data', function(data){
   var i=0;
   $('#zone').html('');
@@ -93,33 +114,34 @@ socket2.on('send_data', function(data){
     i++;
   }
 });
-</script>		
-		<script>
-			socket.on("chat_message", function(message) {
-				appendMessage(message);
-			});
-			setTimeout(function() {
+</script>   
+    <script>
+      socket.on("chat_message", function(message) {
+        appendMessage(message); updateScroll();
+      });
+      setTimeout(function() {
     var headID = document.getElementsByTagName("head")[0];         
     var newScript = document.createElement('script');
     newScript.type = 'text/javascript';
     newScript.src = 'assets/scripts/chat.js';
     headID.appendChild(newScript);
 }, 2000);
-      var style = String($("input[name=style]:checked", "#styles").val());
-$('#styles input').on('change', function() {style = String($('input[name=style]:checked', '#styles').val());
-});
-		</script>
-		
+
+    </script>
+    
 <script>
+
 document.addEventListener("DOMContentLoaded", function() {
-  var mouse = {
+        var style = String($("input[name=style]:checked", "#styles").val());
+          var mouse = {
     click: false,
     move: false,
     pos: {x:undefined, y:undefined},
-    pos_prev: false
+    pos_prev: {x:undefined, y:undefined}
   }
-
-
+$('#styles input').on('change', function() {style = String($('input[name=style]:checked', '#styles').val());}
+);
+document.getElementById("styles").onclick = function (){mouse.pos.y = undefined; mouse.pos.x = undefined; mouse.pos_prev.x = undefined; mouse.pos_prev.y = undefined;}
 
   
   var canvas = document.getElementById("drawboard");
@@ -127,15 +149,10 @@ document.addEventListener("DOMContentLoaded", function() {
   canvas.width = 700;
   canvas.height = 550;
   var context = canvas.getContext("2d");
-
-
 // Set up touch events for mobile, etc
 canvas.addEventListener("touchstart", function (e) {
-  if (e.touches.length > 1){return true;}
-  else {
-        mousePos = getTouchPos(canvas, e);
-  
-  var touch = e.touches[0];
+if (e.touches.length > 1) {mouse.pos_prev.x = undefined; mouse.pos_prev.y = undefined; clearTimeout(timer); return true;}
+else  {var touch = e.touches[0];
   var mouseEvent = new MouseEvent("mousedown", {
     clientX: touch.clientX,
     clientY: touch.clientY
@@ -143,78 +160,97 @@ canvas.addEventListener("touchstart", function (e) {
   canvas.dispatchEvent(mouseEvent);
 }}, false);
 canvas.addEventListener("touchend", function (e) {
-  if (e.touches.length > 1){return true;}
-  else {
   var mouseEvent = new MouseEvent("mouseup", {});
   canvas.dispatchEvent(mouseEvent);
-}}, false);
+}, false);
 canvas.addEventListener("touchmove", function (e) {
-  if (e.touches.length > 1){return true;}
-  else {
   var touch = e.touches[0];
   var mouseEvent = new MouseEvent("mousemove", {
     clientX: touch.clientX,
     clientY: touch.clientY
   });
   canvas.dispatchEvent(mouseEvent);
-}}, false);
-
+}, false);
 // Get the position of a touch relative to the canvas
-function getTouchPos(canvasDom, touchEvent) {
-  var rect = canvasDom.getBoundingClientRect();
-  return {
-    x: touchEvent.touches[0].clientX - rect.left,
-    y: touchEvent.touches[0].clientY - rect.top
-  };
-}
 var stuff = document.getElementById("stuff")
 var slider1 = document.getElementById("slider-1")
 document.body.addEventListener("touchstart", function (e) {
-  if (e.touches.length > 1){return true;}
-  else if (e.target == canvas) {
-    e.preventDefault();
-  }
-}, false);
-document.body.addEventListener("touchend", function (e) {
-  if (e.touches.length > 1){return true;}
+  if (e.touches.length > 0){ return true;}
   else if (e.target == canvas) {
     e.preventDefault();
   }
 }, false);
 document.body.addEventListener("touchmove", function (e) {
-  if (e.touches.length > 1){return true;}
+  if (e.touches.length > 1){mouse.click = false; mouse.pos_prev.x = undefined; mouse.pos_prev.y = undefined; return true;}
   else if (e.target == canvas) {
     e.preventDefault();
   }
 }, false);
+document.body.addEventListener("touchend", function (e) {
+  if (e.touches.length > 0){return true;}
+  else if (e.target == canvas) {
+    e.preventDefault();
+  }
+}, false);
+document.body.onselectstart = function() {return false;};
+stuff.addEventListener("touchstart", function (e) {
+  if (e.touches.length > 1){return true;}
+  else {
+  
+  var touch = e.touches[0];
+  var mouseEvent = new MouseEvent("mousedown", {
+    clientX: touch.clientX,
+    clientY: touch.clientY
 
-document.body.onselectstart = function() {return false;}
-
-
-
+  });
+  stuff.dispatchEvent(mouseEvent); e.preventDefault();
+}}, false);
+stuff.addEventListener("touchend", function (e) {
+  if (e.touches.length > 0){return true;}
+  else {
+  var mouseEvent = new MouseEvent("mouseup", {});
+  stuff.dispatchEvent(mouseEvent); e.preventDefault();
+}}, false);
+stuff.addEventListener("touchmove", function (e) {
+  if (e.touches.length > 1) {return true;} else {
+  var touch = e.touches[0];
+  var mouseEvent = new MouseEvent("mousemove", {
+    clientX: touch.clientX,
+    clientY: touch.clientY
+  });
+  stuff.dispatchEvent(mouseEvent); e.preventDefault();
+}}, false);
+var timer
   canvas.onmousedown = function(e) {
-    mouse.click = true;
-    mouse.pos.x = e.pageX;
-    mouse.pos.y = e.pageY;
-  };
+    var rect = canvas.getBoundingClientRect(); if (String(style) !== "line" && String(style) !== "rectangle" && String(style) !== "ellipse") {
+    mouse.pos.x = e.clientX - rect.left;
+    mouse.pos.y = e.clientY - rect.top;
+    clearTimeout(timer); timer = setTimeout(function() {mouse.click = true;}, 0);
+  } else { if (mouse.pos_prev.x == undefined && mouse.pos_prev.y == undefined){
+    mouse.pos_prev.x = e.clientX - rect.left;
+    mouse.pos_prev.y = e.clientY - rect.top; mouse.pos.x = undefined; mouse.pos.y = undefined; return;}
+    else if ((!mouse.pos.x) && (!mouse.pos.y)) {
+    mouse.pos.x = e.clientX - rect.left;
+    mouse.pos.y = e.clientY - rect.top; mouse.click = true; setTimeout( function() {mouse.pos.y = undefined; mouse.pos.x = undefined; mouse.pos_prev.x = undefined; mouse.pos_prev.y = undefined; mouse.click = false;}, 100)
+    }}};
   
-  canvas.onmouseup = function(e) {
+  canvas.onmouseup = function(e) { if (String(style) !== "line" && String(style) !== "rectangle" && String(style) !== "ellipse") {
     mouse.click = false;
-    mouse.pos_prev = undefined;
-  };
-  
-  canvas.onmousemove = function(e) {
-    mouse.pos.x = e.pageX;
-    mouse.pos.y = e.pageY;
-    mouse.move = true;
-  };
+    mouse.pos_prev.x = undefined;
+    mouse.pos_prev.y = undefined;
+  }};
 
+  canvas.onmousemove = function(e) { if (String(style) !== "line" && String(style) !== "rectangle" && String(style) !== "ellipse") {
+   var rect = canvas.getBoundingClientRect(); 
+    mouse.pos.x = e.clientX - rect.left;
+    mouse.pos.y = e.clientY - rect.top;
+    mouse.move = true;
+  }};
   socket.on("get_image", function() {
     // get the dataURL in .png format
     var dataURL = document.getElementById("drawboard").toDataURL();
     socket.emit("send_image", dataURL)
   });
-
   socket.on("image", function(image){
     var img=new Image();  
     img.onload=start;
@@ -224,10 +260,9 @@ document.body.onselectstart = function() {return false;}
         };
       socket.emit("image_recieved"); 
       });
-
-  socket.on("draw_line", function draw(data) {
+socket.on("draw_line", function draw(data) {
     var line = data.line;
-    if (String(line[4]) == "square" || String(line[4]) == "round" || String(line[4]) == "butt"){
+    if (String(line[4]) == "square" || String(line[4]) == "round" || String(line[4]) == "jagged"){ if ((line[1].x) && (line[1].y)) {
     context.beginPath();
     context.lineCap = String(line[4]);
     context.lineJoin = "round";
@@ -236,13 +271,25 @@ document.body.onselectstart = function() {return false;}
     context.moveTo(line[0].x, line[0].y);
     context.lineTo(line[1].x, line[1].y);
     context.stroke();
-  } else if (String(line[4]) == "spray"){
+} else if (line[3] > 1){
+    context.beginPath();
+    context.lineCap = String(line[4]);
+    context.lineJoin = "round";
+    context.lineWidth = line[3];
+    context.strokeStyle = line[2];
+    context.moveTo(line[0].x, line[0].y);
+    context.lineTo(line[0].x, line[0].y + .01);
+    context.stroke();
+
+  } else 
+{
+context.fillStyle = line[2];
+context.fillRect(line[0].x,line[0].y,1,1); }} else if (String(line[4]) == "spray"){
   var line = data.line;
   context.lineWidth = line[3];
   var radius = context.lineWidth / 2;
   var area = radius * radius * Math.PI;
   var dotsPerTick = Math.ceil(area / 30);
-
   var currentPos = line[0];
   function spray3 () {
     for (var i = 0; i < dotsPerTick; i++) {
@@ -252,7 +299,116 @@ document.body.onselectstart = function() {return false;}
                   currentPos.y + offset.y, 1, 1);
     }
   }; spray3();
-};})
+} else if (line[4] == "line"){
+  context.beginPath();
+  context.strokeStyle = line[2];
+  context.lineWidth = line[3];
+  context.lineCap = "butt"
+  context.moveTo(line[1].x, line[1].y);
+    context.lineTo(line[0].x, line[0].y);
+     context.stroke();
+} else if (line[4] == "rectangle")
+{   context.strokeStyle = line[2];
+  context.lineWidth = line[3];
+  context.lineJoin = "miter";
+  context.strokeRect(line[1].x,line[1].y,line[0].x - line[1].x,line[0].y - line[1].y);
+
+}
+else if (line[4] == "ellipse"){
+  context.beginPath();
+  context.strokeStyle = line[2];
+  context.lineWidth = line[3];
+  ellipse((line[1].x + line[0].x)/2,(line[1].y + line[0].y)/2,line[0].x - line[1].x, line[0].y - line[1].y);
+} else if (line[4] == "fill"){ 
+var rgb2 = line[2].replace(/[^\d,]/g, '').split(','); var rgba = {r:Number(rgb2[0]), g:Number(rgb2[1]), b:Number(rgb2[2]), a:255}; floodfill(line[0].x, line[0].y, rgba, context, 700, 550, 25);
+}
+})
+function floodfill(x,y,fillcolor,ctx,width,height,tolerance) {
+  var img = ctx.getImageData(0,0,width,height);
+  var data = img.data;
+  var length = data.length;
+  var Q = [];
+  var i = (x+y*width)*4;
+  var e = i, w = i, me, mw, w2 = width*4;
+  var targetcolor = [data[i],data[i+1],data[i+2],data[i+3]];
+  var targettotal = data[i]+data[i+1]+data[i+2]+data[i+3];
+
+  if(!pixelCompare(i,targetcolor,targettotal,fillcolor,data,length,tolerance)) { return false; }
+  Q.push(i);
+  while(Q.length) {
+    i = Q.pop();
+    if(pixelCompareAndSet(i,targetcolor,targettotal,fillcolor,data,length,tolerance)) {
+      e = i;
+      w = i;
+      mw = parseInt(i/w2)*w2; //left bound
+      me = mw+w2; //right bound     
+      while(mw<(w-=4) && pixelCompareAndSet(w,targetcolor,targettotal,fillcolor,data,length,tolerance)); //go left until edge hit
+      while(me>(e+=4) && pixelCompareAndSet(e,targetcolor,targettotal,fillcolor,data,length,tolerance)); //go right until edge hit
+      for(var j=w;j<e;j+=4) {
+        if(j-w2>=0    && pixelCompare(j-w2,targetcolor,targettotal,fillcolor,data,length,tolerance)) Q.push(j-w2); //queue y-1
+        if(j+w2<length  && pixelCompare(j+w2,targetcolor,targettotal,fillcolor,data,length,tolerance)) Q.push(j+w2); //queue y+1
+      }       
+    }
+  }
+  ctx.putImageData(img,0,0);
+}
+
+function pixelCompare(i,targetcolor,targettotal,fillcolor,data,length,tolerance) {  
+  if (i<0||i>=length) return false; //out of bounds
+  if (data[i+3]===0)  return true;  //surface is invisible
+  
+  if (
+    (targetcolor[3] === fillcolor.a) && 
+    (targetcolor[0] === fillcolor.r) && 
+    (targetcolor[1] === fillcolor.g) && 
+    (targetcolor[2] === fillcolor.b)
+  ) return false; //target is same as fill
+  
+  if (
+    (targetcolor[3] === data[i+3]) &&
+    (targetcolor[0] === data[i]  ) && 
+    (targetcolor[1] === data[i+1]) &&
+    (targetcolor[2] === data[i+2])
+  ) return true; //target matches surface 
+  
+  if (
+    Math.abs(targetcolor[3] - data[i+3])<=(255-tolerance) &&
+    Math.abs(targetcolor[0] - data[i]  )<=tolerance && 
+    Math.abs(targetcolor[1] - data[i+1])<=tolerance &&
+    Math.abs(targetcolor[2] - data[i+2])<=tolerance
+  ) return true; //target to surface within tolerance 
+  
+  return false; //no match
+}
+
+function pixelCompareAndSet(i,targetcolor,targettotal,fillcolor,data,length,tolerance) {
+  if(pixelCompare(i,targetcolor,targettotal,fillcolor,data,length,tolerance)) {
+    //fill the color
+    data[i]    = fillcolor.r;
+    data[i+1] = fillcolor.g;
+    data[i+2] = fillcolor.b;
+    data[i+3] = fillcolor.a;
+    return true;
+  }
+  return false;
+}
+
+function ellipse(cx, cy, w, h){      
+    var ctx = canvas.getContext('2d');
+    var lx = cx - w/2,
+        rx = cx + w/2,
+        ty = cy - h/2,
+        by = cy + h/2;
+    var magic = 0.551784;
+    var xmagic = magic*w/2;
+    var ymagic = h*magic/2;
+    ctx.moveTo(cx,ty);
+    ctx.bezierCurveTo(cx+xmagic,ty,rx,cy-ymagic,rx,cy);
+    ctx.bezierCurveTo(rx,cy+ymagic,cx+xmagic,by,cx,by);
+    ctx.bezierCurveTo(cx-xmagic,by,lx,cy+ymagic,lx,cy);
+    ctx.bezierCurveTo(lx,cy-ymagic,cx-xmagic,ty,cx,ty);
+    ctx.stroke();
+}
 
 function randomPointInRadius(radius) {
   for (;;) {
@@ -263,15 +419,28 @@ function randomPointInRadius(radius) {
   }
 }
 
+function getPixelColor(x, y) {
+        var pxData = context.getImageData(x,y,1,1);
+        $("#slider-1").slider('value',pxData.data[0]);
+        $("#slider-2").slider('value',pxData.data[1]);
+        $("#slider-3").slider('value',pxData.data[2]);
+        r = pxData.data[0];
+        g = pxData.data[1];
+        b = pxData.data[2];
+        cl = 'rgb('+r+','+g+','+b+')';
+        pos.color = cl
+        drawOnCanvas();
+        socket2.emit('update_coords', pos);
+    }
   
   
   function drawLoop() {
-    if (mouse.click) {
+    if ((mouse.click) && (style == "square" || style == "round" || style == "spray" || style == "jagged" || style == "line" || style == "rectangle" || style == "ellipse" || style == "fill")){
       socket.emit("draw_line", { line: [mouse.pos, mouse.pos_prev, cl, dwidth, style] });
       mouse.move = false;
-    }
+    } else if (mouse.click && style == "color-select") {getPixelColor(mouse.pos.x, mouse.pos.y)}
     
-    if (mouse.click) {mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};};
+    if (mouse.click && String(style) !== "line" && String(style) !== "rectangle" && String(style) !== "ellipse") {mouse.pos_prev.x = mouse.pos.x; mouse.pos_prev.y = mouse.pos.y;}
     setTimeout(drawLoop, 25);
   }
   
@@ -323,8 +492,8 @@ function createSlider2(slider) {
       value: g,
       slide: function( event, ui ) {
         drawOnCanvas();
-      	g = ui.value;
-      	cl = 'rgb('+r+','+g+','+b+')';
+        g = ui.value;
+        cl = 'rgb('+r+','+g+','+b+')';
         pl.color = cl;
       }
   })
@@ -367,5 +536,6 @@ $(function() {
 document.getElementById("myCanvas2").style.backgroundColor = cl;
 </script>
 
-	</body>
+  </body>
 </html>
+
