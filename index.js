@@ -20,14 +20,15 @@ mousetrack = io.of('/mousetrack')
 draw.on("connection", function(socket) {
 
 	console.log("client connected to /draw");
-    draw_players.push(socket);
     	setTimeout(function(){socket.emit("image", image)}, 10);
     
 
     socket.on("image_recieved", function(){ 
     	setTimeout( function(){
 			for (var thing in drawHistory) 
-			socket.emit("draw_line", { line: drawHistory[thing] } )
+			socket.emit("draw_line", { line: drawHistory[thing] } ); draw.emit('chat_message', 'user connected'); 	console.log("client connected to /draw");
+    draw_players.push(socket);
+
 		}, 500);
 	});
 	
@@ -38,14 +39,14 @@ draw.on("connection", function(socket) {
 	
 	setInterval(function() { 
 		var randomClient; 
-		if (drawHistory.length >= 3000 && draw_players.length > 0) {
+		if (drawHistory.length >= 1000 && draw_players.length > 0) {
 			randomClient = Math.floor(Math.random() * draw_players.length);
-			draw_players[randomClient].emit("get_image"); console.log("calling for image"); drawHistory = []; 
+			draw_players[randomClient].emit("get_image"); console.log("calling for image"); 
 			}
 		}, 30000); 
 
 	socket.on("send_image", function(dataURL) {
-		image = dataURL; console.log("image recieved");});
+		image = dataURL; console.log("image recieved"); drawHistory = [];});
 	
 	socket.on('disconnect', function(){
     	console.log('client disconnected from /draw');
