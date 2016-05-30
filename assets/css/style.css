@@ -12,6 +12,7 @@ canvas {
 	position: absolute;
 	top: 0px;
 	left: 0px;
+	image-rendering: pixelated;
 }
 
 #chat {
@@ -56,14 +57,14 @@ form {
 
 #inputField input {
 	box-sizing: border-box;
-	width: 89%;
+	width: 80%;
 	height: 100%;
 }
 
 #inputField button {
 	box-sizing: border-box;
 	width: 10%;
-	font-size: 1vw;
+	font-size: 10px;
 	background: rgb(130, 224, 255);
 	height: 100%;
 	background: #0E4C95;
@@ -79,35 +80,27 @@ a {
   width: 20px;
   height: 20px;
   position: absolute;
-  z-index: +3;
+  z-index: +2;
 }
 #slider-1{
- margin-left: 20px;
- margin-right: 20px;
  position: absolute;
  top: 450px;
  left: 720px;
 }
 
 #slider-2{
- margin-left: 20px;
- margin-right: 20px;
  position: absolute;
  top: 450px;
  left: 760px;
 } 
 
 #slider-3{
- margin-left: 20px;
- margin-right: 20px;
  position: absolute;
  top: 450px;
  left: 800px;
 }
 
 #slider-4{
- margin-left: 20px;
- margin-right: 20px;
  position: absolute;
  top: 450px;
  left: 840px; 
@@ -123,4 +116,9 @@ a {
  height: 100px;
  top: 450px;
  left: 1060px; 
+}
+.ui-slider .ui-slider-handle{
+	width: 35px;
+	height: 20px;
+	left: -13px;
 }
