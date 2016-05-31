@@ -246,11 +246,7 @@ var timer
     mouse.pos.y = e.clientY - rect.top;
     mouse.move = true;
   }};
-  socket.on("get_image", function() {
-    // get the dataURL in .png format
-    var dataURL = document.getElementById("drawboard").toDataURL();
-    socket.emit("send_image", dataURL)
-  });
+
   socket.on("image", function(image){
     var img=new Image();  
     img.onload=start;
