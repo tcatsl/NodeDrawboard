@@ -1,25 +1,49 @@
 var express = require("express");
 var app = express();
+var app2 = express();
 var http = require("http").Server(app);
+var http2 = require("http").Server(app2);
 var io = require("socket.io")(http);
+var io2 = require("socket.io")(http2);
 var path = require("path");
 
 var PORT = process.argv.length <= 2 ? 3331 : process.argv[2];
 var drawHistory = [];
 
 app.use("/assets/", express.static(__dirname + "/assets"));
+app2.use("/assets/", express.static(__dirname + "/assets"));
 
 app.get('/', function(request, response){
   response.sendFile(__dirname + "/index.html");
 });
+app2.get('/', function(request, response){
+  response.sendFile(__dirname + "/index2.html");
+});
+
 draw = io.of('/draw');
-draw_players = []
+draw2 = io2.of('/draw');
 t = 0;
 var image;
 mousetrack = io.of('/mousetrack')
+draw2.on("connection", function(socket){
+		console.log("client connected to /draw2");
+		    	setTimeout(function(){socket.emit("image", image)}, 10);
+    
+
+    socket.on("image_recieved", function(){ 
+    	setTimeout( function(){
+			for (var thing in drawHistory) 
+			socket.emit("draw_line", { line: drawHistory[thing] } ); draw2.emit('chat_message', 'user connected to draw2'); 	console.log("client connected to /draw");
+    
+
+		}, 500);
+	});
+	
+		socket.on("send_image", function(dataURL) {
+		image = dataURL; console.log("image recieved"); drawHistory = [];});
+});
 draw.on("connection", function(socket) {
 
-	console.log("client connected to /draw");
     	setTimeout(function(){socket.emit("image", image)}, 10);
     
 
@@ -27,34 +51,28 @@ draw.on("connection", function(socket) {
     	setTimeout( function(){
 			for (var thing in drawHistory) 
 			socket.emit("draw_line", { line: drawHistory[thing] } ); draw.emit('chat_message', 'user connected'); 	console.log("client connected to /draw");
-    draw_players.push(socket);
+    
 
 		}, 500);
 	});
 	
 	socket.on("draw_line", function(data) {
 		drawHistory.push(data.line);
-		draw.emit("draw_line", { line: data.line } );
+		draw.emit("draw_line", { line: data.line }); 
+		draw2.emit("draw_line", { line: data.line });
 	});
 	
-	setInterval(function() { 
-		var randomClient; 
-		if (drawHistory.length >= 1000 && draw_players.length > 0) {
-			randomClient = Math.floor(Math.random() * draw_players.length);
-			draw_players[randomClient].emit("get_image"); console.log("calling for image"); 
+	setInterval(function() {  
+		if (drawHistory.length >= 1000) {
+			draw2.emit("get_image"); console.log("calling for image"); 
 			}
-		}, 30000); 
+		}, 60000); 
 
-	socket.on("send_image", function(dataURL) {
-		image = dataURL; console.log("image recieved"); drawHistory = [];});
+
 	
 	socket.on('disconnect', function(){
     	console.log('client disconnected from /draw');
     	draw.emit('chat_message', 'user disconnected');
-    	var index = draw_players.indexOf(socket);
-        if (index != -1) {
-            draw_players.splice(index, 1);
-        }
     });
     
     socket.on('chat_message', function(message) {
@@ -118,7 +136,8 @@ draw.on("connection", function(socket) {
    });
 });
 
-
+http2.listen(3332, function(){console.log('listening on localhost:' + 3332);
+});
 http.listen(PORT, function(){
   console.log('listening on localhost:' + PORT);
 });
