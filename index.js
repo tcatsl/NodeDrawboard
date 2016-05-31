@@ -26,7 +26,7 @@ t = 0;
 var image;
 mousetrack = io.of('/mousetrack')
 draw2.on("connection", function(socket){
-		console.log("client connected to /draw2");
+		console.log("you connected to /draw2");
 		    	setTimeout(function(){socket.emit("image", image)}, 10);
     
 
@@ -41,7 +41,24 @@ draw2.on("connection", function(socket){
 	
 		socket.on("send_image", function(dataURL) {
 		image = dataURL; console.log("image recieved"); drawHistory = [];});
+
+			socket.on("draw_line", function(data) {
+		drawHistory.push(data.line);
+		draw.emit("draw_line", { line: data.line }); 
+		draw2.emit("draw_line", { line: data.line });
+	});
+			socket.on('disconnect', function(){
+    	console.log('you disconnected from /draw2');
+    	draw.emit('chat_message', 'user disconnected');
+    	draw2.emit('chat_message', 'user disconnected')
+    });
+    
+    socket.on('chat_message', function(message) {
+    	draw.emit('chat_message', message);
+    	draw2.emit('chat_message', message);
+    });
 });
+
 draw.on("connection", function(socket) {
 
     	setTimeout(function(){socket.emit("image", image)}, 10);
@@ -73,10 +90,12 @@ draw.on("connection", function(socket) {
 	socket.on('disconnect', function(){
     	console.log('client disconnected from /draw');
     	draw.emit('chat_message', 'user disconnected');
+    	draw2.emit('chat_message', 'user disconnected')
     });
     
     socket.on('chat_message', function(message) {
     	draw.emit('chat_message', message);
+    	draw2.emit('chat_message', message);
     });
 });
 
