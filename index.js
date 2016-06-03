@@ -25,22 +25,23 @@ draw2 = io2.of('/draw');
 t = 0;
 var image;
 mousetrack = io.of('/mousetrack')
+mousetrack2 = io2.of('/mousetrack')
 draw2.on("connection", function(socket){
 		console.log("you connected to /draw2");
 		    	setTimeout(function(){socket.emit("image", image)}, 10);
     
-
+    socket.on('ping', function(){socket.emit('pong')});
     socket.on("image_recieved", function(){ 
     	setTimeout( function(){
 			for (var thing in drawHistory) 
-			socket.emit("draw_line", { line: drawHistory[thing] } ); draw2.emit('chat_message', 'user connected to draw2'); 
+			socket.emit("draw_line", { line: drawHistory[thing] } ); draw2.emit('chat_message', 'user connected to draw2'); 	console.log("client connected to /draw");
     
 
 		}, 500);
 	});
 	
 		socket.on("send_image", function(dataURL) {
-		image = dataURL; console.log("image recieved"); drawHistory = [];});
+		image = dataURL; console.log("image recieved");});
 
 			socket.on("draw_line", function(data) {
 		drawHistory.push(data.line);
@@ -81,9 +82,10 @@ draw.on("connection", function(socket) {
 	
 	setInterval(function() {  
 		if (drawHistory.length >= 1000) {
-			draw2.emit("get_image"); console.log("calling for image"); 
+			draw2.emit("get_image"); console.log("calling for image");  drawHistory = []; 
 			}
 		}, 60000); 
+
 
 
 	
@@ -110,7 +112,8 @@ draw.on("connection", function(socket) {
     data.id = socket.id;
     m_players[i] = data;
     i++;
-    mousetrack.emit("send_data", m_players)
+    mousetrack.emit("send_data", m_players);
+    mousetrack2.emit("send_data", m_players);
    });
 
    socket.on('update_coords', function(pos){
@@ -127,6 +130,7 @@ draw.on("connection", function(socket) {
      }
 
      mousetrack.emit("send_data", m_players);
+     mousetrack2.emit("send_data", m_players);
    });
 
    socket.on('disconnect', function()
@@ -151,6 +155,7 @@ draw.on("connection", function(socket) {
      	m_players = tmp;
      	i = j;
        mousetrack.emit('send_data', m_players);
+       mousetrack2.emit("send_data", m_players);
        console.log("client disconnected from /mousetrack");
    });
 });
