@@ -39,7 +39,7 @@
 <INPUT TYPE=RADIO NAME="style" VALUE="ellipse">ellipse</INPUT><BR> 
 <INPUT TYPE=RADIO NAME="style" VALUE="square">square</INPUT><BR> 
 <INPUT TYPE=RADIO NAME="style" VALUE="round"checked="checked">round</INPUT><BR> 
-<INPUT TYPE=RADIO NAME="style" VALUE="jagged">jagged</INPUT><br>
+<INPUT TYPE=RADIO NAME="style" VALUE="butt">jagged</INPUT><br>
 <INPUT TYPE=RADIO NAME="style" VALUE="fill">fill</INPUT><br>
 <INPUT TYPE=RADIO NAME="style" VALUE="spray">spray</INPUT>
 </form>
@@ -125,7 +125,7 @@ socket2.on('send_data', function(data){
     newScript.type = 'text/javascript';
     newScript.src = 'assets/scripts/chat.js';
     headID.appendChild(newScript);
-}, 2000);
+}, 200);
 
     </script>
     
@@ -143,7 +143,7 @@ $('#styles input').on('change', function() {style = String($('input[name=style]:
 );
 document.getElementById("styles").onclick = function (){mouse.pos.y = undefined; mouse.pos.x = undefined; mouse.pos_prev.x = undefined; mouse.pos_prev.y = undefined;}
 
-  setInterval(function(){socket.emit("ping")}, 45000);
+  setInterval(function(){socket.emit("ping")}, 4500);
   socket.on("pong", function(){console.log("pong from server")});  
   var canvas = document.getElementById("drawboard");
   var chatBox = document.getElementById("chat");
@@ -263,7 +263,7 @@ var timer
       });
 socket.on("draw_line", function draw(data) {
     var line = data.line;
-    if (String(line[4]) == "square" || String(line[4]) == "round" || String(line[4]) == "jagged"){ if ((line[1].x) && (line[1].y)) {
+    if (String(line[4]) == "square" || String(line[4]) == "round" || String(line[4]) == "butt"){ if ((line[1].x) && (line[1].y)) {
     context.beginPath();
     context.lineCap = String(line[4]);
     context.lineJoin = "round";
@@ -320,143 +320,166 @@ else if (line[4] == "ellipse"){
   context.strokeStyle = line[2];
   context.lineWidth = line[3];
   ellipse((line[1].x + line[0].x)/2,(line[1].y + line[0].y)/2,line[0].x - line[1].x, line[0].y - line[1].y);
-} else if (line[4] == "fill"){ 
+} else if (line[4] == "fill"){
 var rgb2 = line[2].replace(/[^\d,]/g, '').split(','); var rgba = [Number(rgb2[0]), Number(rgb2[1]), Number(rgb2[2]), 255]; floodFillLinear(canvas, line[0].x, line[0].y, rgba, 40);
 }
 })
+
 function floodFillLinear(canvas, x, y, fillColor, tolerance) {
-	/**
-	 * 相关数据准备
-	 */
-	var width = canvas.width;
-	var height = canvas.height;
-	var context = canvas.getContext("2d");
-	var pixelData = context.getImageData(0, 0, canvas.width, canvas.height);
-	var pixelsChecked = new Array(width * height);
-	var startIdx = (width * y + x) * 4;
-	var startColor = [ pixelData.data[startIdx], pixelData.data[startIdx + 1],
-			pixelData.data[startIdx + 2], pixelData.data[startIdx + 3] ];
-	if (startColor[0] == 0 && startColor[1] == 0 && startColor[2] == 0
-			&& startColor[3] == 255) {
-		return;
-	}
-	var ranges = new Queue();
-	/**
-	 * 算法执行
-	 */
-	LinearFill(x, y);
-	var range;
-	while (!ranges.empty()) {
-		range = ranges.dequeue();
-		var downPxIdx = (width * (range.Y + 1)) + range.startX;
-		var upPxIdx = (width * (range.Y - 1)) + range.startX;
-		var upY = range.Y - 1;
-		var downY = range.Y + 1;
-		for (var i = range.startX; i <= range.endX; i++) {
-			if (range.Y > 0 && (!pixelsChecked[upPxIdx]) && CheckPixel(upPxIdx)) {
-				LinearFill(i, upY);
-			}
-			if (range.Y < (height - 1) && (!pixelsChecked[downPxIdx])
-					&& CheckPixel(downPxIdx)) {
-				LinearFill(i, downY);
-			}
-			downPxIdx++;
-			upPxIdx++;
-		}
-	}
-	/**
-	 * 将结果进行渲染
-	 */
-	context.putImageData(pixelData, 0, 0, 0, 0, width, height);
-	function LinearFill(x, y) {
-		var lFillLoc = x;
-		var pxIdx = width * y + x;
-		while (true) {
-			SetPixel(pxIdx, fillColor);
-			pixelsChecked[pxIdx] = true;
-			lFillLoc--;
-			pxIdx--;
-			if (lFillLoc < 0 || (pixelsChecked[pxIdx]) || !CheckPixel(pxIdx)) {
-				break;
-			}
-		}
-		lFillLoc++;
-		rFillLoc = x;
-		pxIdx = (width * y) + x;
-		while (true) {
-			SetPixel(pxIdx, fillColor);
-			pixelsChecked[pxIdx] = true;
-			rFillLoc++;
-			pxIdx++;
-			if (rFillLoc >= width || pixelsChecked[pxIdx] || !CheckPixel(pxIdx)) {
-				break;
-			}
-		}
-		rFillLoc--;
-		var r = new FloodFillRange(lFillLoc, rFillLoc, y);
-		ranges.enqueue(r);
-	}
-	function SetPixel(pxIdx, color) {
-		pixelData.data[pxIdx * 4] = color[0];
-		pixelData.data[pxIdx * 4 + 1] = color[1];
-		pixelData.data[pxIdx * 4 + 2] = color[2];
-		pixelData.data[pxIdx * 4 + 3] = color[3];
-	}
-	function FloodFillRange(startX, endX, Y) {
-		this.startX = startX;
-		this.endX = endX;
-		this.Y = Y;
-	}
-	function CheckPixel(px) {
-		var red = pixelData.data[px * 4];
-		var green = pixelData.data[px * 4 + 1];
-		var blue = pixelData.data[px * 4 + 2];
-		var alpha = pixelData.data[px * 4 + 3];
-		return (red >= (startColor[0] - tolerance)
-				&& red <= (startColor[0] + tolerance)
-				&& green >= (startColor[1] - tolerance)
-				&& green <= (startColor[1] + tolerance)
-				&& blue >= (startColor[2] - tolerance)
-				&& blue <= (startColor[2] + tolerance)
-				&& alpha >= (startColor[3] - tolerance) && alpha <= (startColor[3] + tolerance));
-	}
+  /**
+   * 相关数据准备
+   */
+  var width = canvas.width;
+  var height = canvas.height;
+  var context = canvas.getContext("2d");
+  var pixelData = context.getImageData(0, 0, canvas.width, canvas.height);
+  var pixelsChecked = new Array(width * height);
+  var startIdx = (width * y + x) * 4;
+  var startColor = [ pixelData.data[startIdx], pixelData.data[startIdx + 1],
+      pixelData.data[startIdx + 2], pixelData.data[startIdx + 3] ];
+  if (startColor[0] == 0 && startColor[1] == 0 && startColor[2] == 0
+      && startColor[3] == 255) {
+    return;
+  }
+  var ranges = new Queue();
+
+  /**
+   * 算法执行
+   */
+  LinearFill(x, y);
+
+  var range;
+
+  while (!ranges.empty()) {
+    range = ranges.dequeue();
+
+    var downPxIdx = (width * (range.Y + 1)) + range.startX;
+    var upPxIdx = (width * (range.Y - 1)) + range.startX;
+    var upY = range.Y - 1;
+    var downY = range.Y + 1;
+
+    for (var i = range.startX; i <= range.endX; i++) {
+      if (range.Y > 0 && (!pixelsChecked[upPxIdx]) && CheckPixel(upPxIdx)) {
+        LinearFill(i, upY);
+      }
+
+      if (range.Y < (height - 1) && (!pixelsChecked[downPxIdx])
+          && CheckPixel(downPxIdx)) {
+        LinearFill(i, downY);
+      }
+
+      downPxIdx++;
+      upPxIdx++;
+    }
+  }
+
+  /**
+   * 将结果进行渲染
+   */
+  context.putImageData(pixelData, 0, 0, 0, 0, width, height);
+
+  function LinearFill(x, y) {
+    var lFillLoc = x;
+    var pxIdx = width * y + x;
+
+    while (true) {
+      SetPixel(pxIdx, fillColor);
+      pixelsChecked[pxIdx] = true;
+      lFillLoc--;
+      pxIdx--;
+      if (lFillLoc < 0 || (pixelsChecked[pxIdx]) || !CheckPixel(pxIdx)) {
+        break;
+      }
+    }
+
+    lFillLoc++;
+
+    rFillLoc = x;
+    pxIdx = (width * y) + x;
+    while (true) {
+      SetPixel(pxIdx, fillColor);
+      pixelsChecked[pxIdx] = true;
+      rFillLoc++;
+      pxIdx++;
+      if (rFillLoc >= width || pixelsChecked[pxIdx] || !CheckPixel(pxIdx)) {
+        break;
+      }
+    }
+
+    rFillLoc--;
+
+    var r = new FloodFillRange(lFillLoc, rFillLoc, y);
+    ranges.enqueue(r);
+  }
+
+  function SetPixel(pxIdx, color) {
+    pixelData.data[pxIdx * 4] = color[0];
+    pixelData.data[pxIdx * 4 + 1] = color[1];
+    pixelData.data[pxIdx * 4 + 2] = color[2];
+    pixelData.data[pxIdx * 4 + 3] = color[3];
+  }
+
+  function FloodFillRange(startX, endX, Y) {
+    this.startX = startX;
+    this.endX = endX;
+    this.Y = Y;
+  }
+
+  function CheckPixel(px) {
+    var red = pixelData.data[px * 4];
+    var green = pixelData.data[px * 4 + 1];
+    var blue = pixelData.data[px * 4 + 2];
+    var alpha = pixelData.data[px * 4 + 3];
+
+    return (red >= (startColor[0] - tolerance)
+        && red <= (startColor[0] + tolerance)
+        && green >= (startColor[1] - tolerance)
+        && green <= (startColor[1] + tolerance)
+        && blue >= (startColor[2] - tolerance)
+        && blue <= (startColor[2] + tolerance)
+        && alpha >= (startColor[3] - tolerance) && alpha <= (startColor[3] + tolerance));
+  }
 }
+
 function Queue() {
-	this.dataStore = [];
+  this.dataStore = [];
 }
+
 Queue.prototype = {
-	// 向队尾添加一个元素
-	enqueue : function(element) {
-		this.dataStore.push(element);
-	},
-	// 删除队首的元素
-	dequeue : function() {
-		return this.dataStore.shift();
-	},
-	// 读取队首的元素
-	front : function() {
-		return this.dataStore[0];
-	},
-	// 读取队尾的元素
-	back : function() {
-		return this.dataStore[this.dataStore.length - 1];
-	},
-	// 显示队列内的所有元素
-	toString : function() {
-		var retStr = "";
-		for (var i = 0; i < this.dataStore.length; ++i) {
-			retStr += this.dataStore[i] + "\n";
-		}
-		return retStr;
-	},
-	// 判断队列是否为空
-	empty : function() {
-		if (this.dataStore.length == 0) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+
+  // 向队尾添加一个元素
+  enqueue : function(element) {
+    this.dataStore.push(element);
+  },
+  // 删除队首的元素
+  dequeue : function() {
+    return this.dataStore.shift();
+  },
+  // 读取队首的元素
+  front : function() {
+    return this.dataStore[0];
+  },
+  // 读取队尾的元素
+  back : function() {
+    return this.dataStore[this.dataStore.length - 1];
+  },
+  // 显示队列内的所有元素
+  toString : function() {
+    var retStr = "";
+    for (var i = 0; i < this.dataStore.length; ++i) {
+      retStr += this.dataStore[i] + "\n";
+    }
+    return retStr;
+  },
+  // 判断队列是否为空
+  empty : function() {
+    if (this.dataStore.length == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 };
 
 function ellipse(cx, cy, w, h){      
@@ -501,7 +524,7 @@ function getPixelColor(x, y) {
   
   
   function drawLoop() {
-    if ((mouse.click) && (style == "square" || style == "round" || style == "spray" || style == "jagged" || style == "line" || style == "rectangle" || style == "ellipse" || style == "fill")){
+    if ((mouse.click) && (style == "square" || style == "round" || style == "spray" || style == "butt" || style == "line" || style == "rectangle" || style == "ellipse" || style == "fill")){
       socket.emit("draw_line", { line: [mouse.pos, mouse.pos_prev, cl, dwidth, style] });
       mouse.move = false;
     } else if (mouse.click && style == "color-select") {getPixelColor(mouse.pos.x, mouse.pos.y)}
