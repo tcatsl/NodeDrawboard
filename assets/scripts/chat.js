@@ -1,4 +1,4 @@
-var username = prompt("Enter your username: ");
+var username = prompt("The sliders are: red, green, blue, and line width. Enter a username for the chat:");
 var textBox = document.getElementById("inputTextBox");
 var messageList = document.getElementById("messages");
 
