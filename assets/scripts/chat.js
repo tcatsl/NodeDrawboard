@@ -15,7 +15,6 @@ function appendMessage(message, backgroundColor) {
 function sendMessage() {
 	var message = username + ": " + document.getElementById("inputTextBox").value;
 	textBox.value = ""; // clear textbox
-	appendMessage(message, "white");
 	socket.emit("chat_message", message);
 	console.log("message");
 	return false;
