@@ -1,5 +1,6 @@
 # NodeDrawboard
-A collaborative drawing board where users can share ideas, chat or just have fun. Made with Node.js using Express.js and Socket.io frameworks.
+A simple, collaborative visual art program made using HTML Canvas, NodeJS, Express, and SocketIO. Fully touch-compatible.
+Also takes code from: https://github.com/excid3/mouse_tracker for mouse tracking. Also uses code from: https://github.com/furf/jquery-ui-touch-punch for touch enabling the sliders. Uses code from https://github.com/karlew/canvas-flood-fill for flood fill tool, and uses code from eloquentjavascipt.net for spray tool.
 
 <h2> How to run </h2>
 <ol>
