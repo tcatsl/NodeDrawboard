@@ -1,124 +1,133 @@
 html, body {
-	height: 95%;
-	width: 100%;
-	margin: 0;
-	padding: 0;
+        height: 95%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 canvas {
-	float: left;
-	background: #FFFAF0;
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	image-rendering: pixelated;
+        float: left;
+        background: #FFFAF0;
+        position: absolute;
+        top: 0px;
+        left: 0px;
 }
 
 #chat {
-	box-sizing: border-box;
-	border: 1px solid black;
-	height: 400px;
-	width: 450px;
-	overflow: auto;
-	background: #F0F8FF;
-	position: absolute;
-	top: 0px;
-	left: 701px;
+        box-sizing: border-box;
+        border: 1px solid black;
+        height: 400px;
+        width: 450px;
+        overflow: auto;
+        background: #F0F8FF;
+        position: absolute;
+        top: 0px;
+        left: 701px;
 }
 
 #chat ul {
-	overflow-y: auto;
-	list-style: none;
+        overflow-y: auto;
+        list-style: none;
 }
 
 #chat li {
-	word-break: break-all;
+        word-break: break-all;
 }
 
+
 #messages {
-	margin-top: 0;
-	margin-bottom: 0;
-	height: 92%;
+        margin-top: 0;
+        margin-bottom: 0;
+        height: 92%;
 }
 
 form {
-	position: relative;
-	height: 8%;
-	width: 100%;
+        position: relative;
+        height: 8%;
+        width: 100%;
 }
 
 #inputField {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	height: 100%;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
 }
 
 #inputField input {
-	box-sizing: border-box;
-	width: 80%;
-	height: 100%;
+        box-sizing: border-box;
+        width: 80%;
+        height: 100%;
 }
 
 #inputField button {
-	box-sizing: border-box;
-	width: 10%;
-	font-size: 10px;
-	background: rgb(130, 224, 255);
-	height: 100%;
-	background: #0E4C95;
-	color: white;
+        box-sizing: border-box;
+        width: 12%;
+        font-size: 10px;
+        background: rgb(130, 224, 255);
+        height: 100%;
+        background: #0E4C95;
+        color: white;
 }
 
 a {
   color: #00B7FF;
 }
-
 .player
 {
   width: 20px;
   height: 20px;
   position: absolute;
-  z-index: +2;
+  z-index: +3;
 }
 #slider-1{
+ margin-left: 20px;
+ margin-right: 20px;
  position: absolute;
  top: 450px;
  left: 720px;
 }
 
 #slider-2{
+ margin-left: 20px;
+ margin-right: 20px;
  position: absolute;
  top: 450px;
  left: 760px;
 } 
 
 #slider-3{
+ margin-left: 20px;
+ margin-right: 20px;
  position: absolute;
  top: 450px;
  left: 800px;
 }
 
 #slider-4{
+ margin-left: 20px;
+ margin-right: 20px;
  position: absolute;
  top: 450px;
- left: 840px; 
+ left: 840px;
 }
+
 #myCanvas2{
  position: absolute;
  top: 450px;
- left: 900px; 
+ left: 900px;
 }
 #styles{
  position: absolute;
  width: 100px;
  height: 100px;
  top: 450px;
- left: 1060px; 
+ left: 1060px;
 }
 .ui-slider .ui-slider-handle{
-	width: 35px;
-	height: 20px;
-	left: -13px;
+        width: 35px;
+        height: 20px;
+        left: -12.5px;
 }
+
