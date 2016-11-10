@@ -6,6 +6,7 @@ Also takes code from: https://github.com/excid3/mouse_tracker for mouse tracking
 <ol>
 <li>Install Node.js</li>
 <li>Navigate to project directory and run "npm install" in order to install dependencies</li>
-<li>Run index.js using Node. Optional command line argument should be the port on which the server will run (Default: 3331) </li>
-<li>Navigate to the specified port of draw2(3332) and keep the page open for image back-up. Block incoming traffic on this port except from your ip address to prevent image injection.
+<li>Run index.js using Node.</li>
+<li>Navigate to the specified port of http2(3332) and keep the page open for image back-up. Block incoming traffic on this port except from your ip address to prevent image injection.
+<li>Navigate to the specified port of http(3331) for use of the application</li>
 </ol>
