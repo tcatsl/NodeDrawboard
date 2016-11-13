@@ -30,7 +30,7 @@ draw2.on("connection", function(socket){
 		console.log("you connected to /draw2");
 		    	setTimeout(function(){socket.emit("image", image)}, 10);
     
-    socket.on('ping', function(){socket.emit('pong')});
+    socket.on('pingcheck', function(){socket.emit('pongcheck')});
     socket.on("image_recieved", function(){ 
     	setTimeout( function(){
 			for (var thing in drawHistory) 
