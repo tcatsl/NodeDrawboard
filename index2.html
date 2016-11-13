@@ -143,8 +143,8 @@ $('#styles input').on('change', function() {style = String($('input[name=style]:
 );
 document.getElementById("styles").onclick = function (){mouse.pos.y = undefined; mouse.pos.x = undefined; mouse.pos_prev.x = undefined; mouse.pos_prev.y = undefined;}
 
-  setInterval(function(){socket.emit("ping")}, 45000);
-  socket.on("pong", function(){console.log("pong from server")});  
+  setInterval(function(){socket.emit("pingcheck")}, 4500);
+  socket.on("pongcheck", function(){console.log("pong from server")});  
   var canvas = document.getElementById("drawboard");
   var chatBox = document.getElementById("chat");
   canvas.width = 700;
