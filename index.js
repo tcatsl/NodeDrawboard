@@ -68,7 +68,7 @@ draw.on("connection", function(socket) {
     socket.on("image_recieved", function(){ 
     	setTimeout( function(){
 			for (var thing in drawHistory) 
-			socket.emit("draw_line", { line: drawHistory[thing] } ); draw.emit('chat_message', 'user connected'); 	console.log("client connected to /draw");
+			socket.emit("draw_line", { line: drawHistory[thing] } ); console.log("client connected to /draw");
     
 
 		}, 500);
