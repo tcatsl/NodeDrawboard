@@ -10,3 +10,4 @@ Also takes code from: https://github.com/excid3/mouse_tracker for mouse tracking
 <li>Navigate to port 3332 in your browser and keep the page open for image back-up. Block incoming traffic on this port except from your IP address to prevent image injection.
 <li>Navigate to port 3331 in your browser for use of the application.</li>
 </ol>
+
