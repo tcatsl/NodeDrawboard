@@ -23,7 +23,7 @@ app2.get('/', function(request, response){
 draw = io.of('/draw');
 draw2 = io2.of('/draw');
 t = 0;
-var image = 'data:image/gif;base64,R0lGODlhAQABAIAAAP7//wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==;';
+var image = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=';
 mousetrack = io.of('/mousetrack')
 mousetrack2 = io2.of('/mousetrack')
 draw2.on("connection", function(socket){
