@@ -116,9 +116,6 @@ socket2.on('send_data', function(data){
 });
 </script>   
     <script>
-      socket.on("chat_message", function(message) {
-        appendMessage(message); updateScroll();
-      });
       setTimeout(function() {
     var headID = document.getElementsByTagName("head")[0];         
     var newScript = document.createElement('script');
