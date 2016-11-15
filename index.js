@@ -34,10 +34,10 @@ draw2.on("connection", function(socket){
     socket.on("image_recieved", function(){ 
     	setTimeout( function(){
 			for (var thing in drawHistory) 
-			socket.emit("draw_line", { line: drawHistory[thing] } ); draw2.emit('chat_message', 'user connected to draw2'); 	console.log("client connected to /draw");
+			socket.emit("draw_line", { line: drawHistory[thing] } ); console.log("client connected to /draw");
     
 
-		}, 500);
+		}, 500);  setTimeout(function(){draw2.emit('chat_message', 'user connected to draw2');}, 3000);
 	});
 	
 		socket.on("send_image", function(dataURL) {
