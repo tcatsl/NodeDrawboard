@@ -116,15 +116,12 @@ socket2.on('send_data', function(data){
 });
 </script>   
     <script>
-      socket.on("chat_message", function(message) {
-        appendMessage(message); updateScroll();
-      });
       setTimeout(function() {
     var headID = document.getElementsByTagName("head")[0];         
     var newScript = document.createElement('script');
     newScript.type = 'text/javascript';
     newScript.src = 'assets/scripts/chat.js';
-    headID.appendChild(newScript);
+    headID.appendChild(newScript); setTimeout(function(){socket.emit('chat_message', 'user connected')}, 500);
 }, 2000);
 
     </script>
