@@ -23,3 +23,6 @@ function updateScroll(){
     var element = document.getElementById("messages");
     element.scrollTop = element.scrollHeight;
 }
+      socket.on("chat_message", function(message) {
+        appendMessage(message); updateScroll();
+      });
