@@ -67,6 +67,13 @@
 <script src="assets/scripts/sliders.js">
 </script>
 <script> document.getElementById("myCanvas2").style.backgroundColor = cl;
+  socket.on("get_image", function() {
+    // get the dataURL in .png format
+    var dataURL = document.getElementById("drawboard").toDataURL();
+    socket.emit("send_image", dataURL)
+  });
+  setInterval(function(){socket.emit("pingcheck")}, 45000);
+  socket.on("pongcheck", function(){console.log("pong from server")});  
 </script>
 
   </body>
