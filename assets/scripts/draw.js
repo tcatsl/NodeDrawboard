@@ -1,5 +1,5 @@
 
-document.addEventListener("DOMContentLoaded", function() {
+
         var style = String($("input[name=style]:checked", "#styles").val());
           var mouse = {
     click: false,
@@ -399,7 +399,6 @@ function getPixelColor(x, y) {
   drawLoop();
   context.fillStyle = 'rgb(255,255,255)';
     context.beginPath();
-    context.fillRect(0, 0, drawboard.width, drawboard.height);;
+    context.fillRect(0, 0, drawboard.width, drawboard.height);
     context.closePath();
     context.fill();
-});
