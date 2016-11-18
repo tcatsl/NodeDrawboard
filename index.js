@@ -28,7 +28,7 @@ mousetrack = io.of('/mousetrack')
 mousetrack2 = io2.of('/mousetrack')
 draw2.on("connection", function(socket){
 		console.log("you connected to /draw2");
-		    	setTimeout(function(){socket.emit("image", image)}, 200);
+		    	setTimeout(function(){socket.emit("image", image)}, 800);
     
     socket.on('pingcheck', function(){socket.emit('pongcheck')});
     socket.on("image_recieved", function(){ 
@@ -62,7 +62,7 @@ draw2.on("connection", function(socket){
 
 draw.on("connection", function(socket) {
 
-    	setTimeout(function(){socket.emit("image", image)}, 200);
+    	setTimeout(function(){socket.emit("image", image)}, 800);
     
 
     socket.on("image_recieved", function(){ 
