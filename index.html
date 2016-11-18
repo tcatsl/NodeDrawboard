@@ -1,4 +1,4 @@
-CTYPE html>
+<!DOCTYPE html>
 
 <html>
   <head>
@@ -48,94 +48,21 @@ CTYPE html>
   <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
   <script src="assets/scripts/jquery.ui.touch-punch.min.js"></script>
     <script> var socket = io('/draw'); </script>
-<script>
-var dwidth = 2
-var name = 'User' + Math.round(Math.random() * 255);
-var r = Math.round(Math.random() * 255);
-var g = Math.round(Math.random() * 255);
-var b = Math.round(Math.random() * 255);
-var cl = 'rgb('+r+','+g+','+b+')';
-if(name == '') name = 'Anonymous';
-var pl = 
-{
-  id: 0,
-  name: name,
-  color: cl,
-  x: 0,
-  y: 0
-};
-document.body.addEventListener("touchmove", function (e) {
-  var touch = e.touches[0];
-  var mouseEvent = new MouseEvent("mousemove", {
-    clientX: touch.clientX,
-    clientY: touch.clientY,
-    pageX: touch.pageX,
-    pageY: touch.pageY
-  });
-  document.body.dispatchEvent(mouseEvent);
-}, false);
-var socket2 = io('/mousetrack');
- 
-socket2.on('connect', function () {
-  socket2.emit('client_connected', pl);
-});
-var canvas;
-var rect;
-var pos;
-$('body').mousemove(function(event){
-canvas = document.getElementById("drawboard");
-rect = canvas.getBoundingClientRect();  
-pos = {
-    x: event.clientX + 2 - rect.left,
-    y: event.clientY + 2 - rect.top,
-    color: cl
-  };
-  socket2.emit('update_coords', pos);
-});
-$('#drawboard').mousedown(function(event){
-canvas = document.getElementById("drawboard");
-rect = canvas.getBoundingClientRect();  
-pos = {
-    x: event.clientX + 2 - rect.left,
-    y: event.clientY + 2 - rect.top,
-    color: cl
-  };
-  socket2.emit('update_coords', pos);
-});
-socket2.on('send_data', function(data){
-  var i=0;
-  $('#zone').html('');
-  while(i < data.length)
-  {
-    var me = '';
-    if( data[i].id == pl.id ) me = 'You';
-    player = '<div class="player" id="p_' + data[i].id + '" style="background: ' + data[i].color + '  ;left:' + data[i].x + 'px;top:' + data[i].y +'px"> ' + me + '</div>';
-    $('#zone').append(player);
-    i++;
-  }
-});
-</script>   
+<script src="assets/scripts/mousetrack.js">
+</script>
     <script>
       setTimeout(function() {
     var headID = document.getElementsByTagName("head")[0];         
     var newScript = document.createElement('script');
     newScript.type = 'text/javascript';
     newScript.src = 'assets/scripts/chat.js';
-    headID.appendChild(newScript); setTimeout(function(){socket.emit('chat_message', 'user connected')}, 500); 
+    headID.appendChild(newScript); setTimeout(function(){socket.emit('chat_message', 'user connected')}, 500);
 }, 2000);
-
     </script>
     
-<script src="assets/scripts/draw.js">
-</script>
+<script src="assets/scripts/draw.js" ></script>
 <script src="assets/scripts/sliders.js">
 </script>
-<script> 
-document.getElementById("myCanvas2").style.backgroundColor = cl;
-</script>
-
+<script>document.getElementById("myCanvas2").style.backgroundColor = cl;</script>
   </body>
 </html>
-
-
-
