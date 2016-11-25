@@ -291,7 +291,7 @@ function randomPointInRadius(radius) {
 	
 	setInterval(function() {  
 		if (drawHistory.length >= 500) {
-			image = canvas.toDataURL(); console.log(Image); console.log("backing up image"); 
+			image = canvas.toDataURL(); console.log("backing up image"); 
 			}
 		}, 60000); 
 
