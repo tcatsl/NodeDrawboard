@@ -29,7 +29,7 @@ else  {var touch = e.touches[0];
 }}, false);
 canvas.addEventListener("touchend", function (e) {
   var mouseEvent = new MouseEvent("mouseup", {});
-  setTimeout(function(){canvas.dispatchEvent(mouseEvent);}, 30};
+  setTimeout(function(){canvas.dispatchEvent(mouseEvent);}, 30);
 }, false);
 canvas.addEventListener("touchmove", function (e) {
   var touch = e.touches[0];
