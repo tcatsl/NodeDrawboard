@@ -7,7 +7,7 @@ var mouse = {
   }
 $('#styles input').on('change', function() {
   style = String($('input[name=style]:checked', '#styles').val());
-  });
+});
 document.getElementById("styles").onclick = function (){
   mouse.pos.y = undefined; 
   mouse.pos.x = undefined; 
