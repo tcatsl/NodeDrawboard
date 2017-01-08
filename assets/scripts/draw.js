@@ -1,35 +1,43 @@
-
-
-        var style = String($("input[name=style]:checked", "#styles").val());
-          var mouse = {
-    click: false,
-    move: false,
-    pos: {x:undefined, y:undefined},
-    pos_prev: {x:undefined, y:undefined}
+var style = String($("input[name=style]:checked", "#styles").val());
+var mouse = {
+  click: false,
+  move: false,
+  pos: {x:undefined, y:undefined},
+  pos_prev: {x:undefined, y:undefined}
   }
-$('#styles input').on('change', function() {style = String($('input[name=style]:checked', '#styles').val());}
-);
-document.getElementById("styles").onclick = function (){mouse.pos.y = undefined; mouse.pos.x = undefined; mouse.pos_prev.x = undefined; mouse.pos_prev.y = undefined;}
-
-  var dwidth = 2;
-  var canvas = document.getElementById("drawboard");
-  var chatBox = document.getElementById("chat");
-  canvas.width = 700;
-  canvas.height = 550;
-  var context = canvas.getContext("2d");
+$('#styles input').on('change', function() {
+  style = String($('input[name=style]:checked', '#styles').val());
+  });
+document.getElementById("styles").onclick = function (){
+  mouse.pos.y = undefined; mouse.pos.x = undefined; mouse.pos_prev.x = undefined; mouse.pos_prev.y = undefined;
+};
+var dwidth = 2;
+var canvas = document.getElementById("drawboard");
+var chatBox = document.getElementById("chat");
+canvas.width = 700;
+canvas.height = 550;
+var context = canvas.getContext("2d");
 // Set up touch events for mobile, etc
 canvas.addEventListener("touchstart", function (e) {
-if (e.touches.length > 1) {mouse.pos_prev.x = undefined; mouse.pos_prev.y = undefined; clearTimeout(timer); return true;}
-else  {var touch = e.touches[0];
-  var mouseEvent = new MouseEvent("mousedown", {
-    clientX: touch.clientX,
-    clientY: touch.clientY
-  });
+  if (e.touches.length > 1) {
+    mouse.pos_prev.x = undefined;
+    mouse.pos_prev.y = undefined;
+    clearTimeout(timer);
+    return true;}
+  else  {
+    var touch = e.touches[0];
+    var mouseEvent = new MouseEvent("mousedown", {
+      clientX: touch.clientX,
+      clientY: touch.clientY
+    });
   canvas.dispatchEvent(mouseEvent);
-}}, false);
+  }
+}, false);
 canvas.addEventListener("touchend", function (e) {
   var mouseEvent = new MouseEvent("mouseup", {});
-  setTimeout(function(){canvas.dispatchEvent(mouseEvent);}, 30);
+  setTimeout(function(){
+    canvas.dispatchEvent(mouseEvent);
+  }, 30);
 }, false);
 canvas.addEventListener("touchmove", function (e) {
   var touch = e.touches[0];
@@ -40,153 +48,205 @@ canvas.addEventListener("touchmove", function (e) {
   canvas.dispatchEvent(mouseEvent);
 }, false);
 // Get the position of a touch relative to the canvas
-var stuff = document.getElementById("stuff")
-var slider1 = document.getElementById("slider-1")
+var stuff = document.getElementById("stuff");
+var slider1 = document.getElementById("slider-1");
 document.body.addEventListener("touchstart", function (e) {
-  if (e.touches.length > 0){ return true;}
+  if (e.touches.length > 0){
+    return true;
+  }
   else if (e.target == canvas) {
     e.preventDefault();
   }
 }, false);
 document.body.addEventListener("touchmove", function (e) {
-  if (e.touches.length > 1){mouse.click = false; mouse.pos_prev.x = undefined; mouse.pos_prev.y = undefined; return true;}
+  if (e.touches.length > 1){
+    mouse.click = false;
+    mouse.pos_prev.x = undefined;
+    mouse.pos_prev.y = undefined;
+    return true;
+  }
   else if (e.target == canvas) {
     e.preventDefault();
   }
 }, false);
 document.body.addEventListener("touchend", function (e) {
-  if (e.touches.length > 0){return true;}
+  if (e.touches.length > 0){
+    return true;
+  }
   else if (e.target == canvas) {
     e.preventDefault();
   }
 }, false);
-document.body.onselectstart = function() {return false;};
+document.body.onselectstart = function() {
+  return false;
+};
 stuff.addEventListener("touchstart", function (e) {
   if (e.touches.length > 1){return true;}
   else {
-  
-  var touch = e.touches[0];
-  var mouseEvent = new MouseEvent("mousedown", {
-    clientX: touch.clientX,
-    clientY: touch.clientY
-
-  });
-  stuff.dispatchEvent(mouseEvent); e.preventDefault();
-}}, false);
+    var touch = e.touches[0];
+    var mouseEvent = new MouseEvent("mousedown", {
+      clientX: touch.clientX,
+      clientY: touch.clientY
+    });
+  stuff.dispatchEvent(mouseEvent);
+  e.preventDefault();
+  }
+}, false);
 stuff.addEventListener("touchend", function (e) {
-  if (e.touches.length > 0){return true;}
-  else {
-  var mouseEvent = new MouseEvent("mouseup", {});
-  stuff.dispatchEvent(mouseEvent); e.preventDefault();
-}}, false);
+  if (e.touches.length > 0){
+    return true;}
+    else {
+      var mouseEvent = new MouseEvent("mouseup", {});
+      stuff.dispatchEvent(mouseEvent);
+      e.preventDefault();
+    }
+}, false);
 stuff.addEventListener("touchmove", function (e) {
-  if (e.touches.length > 1) {return true;} else {
-  var touch = e.touches[0];
-  var mouseEvent = new MouseEvent("mousemove", {
-    clientX: touch.clientX,
-    clientY: touch.clientY
-  });
-  stuff.dispatchEvent(mouseEvent); e.preventDefault();
-}}, false);
-var timer
-  canvas.onmousedown = function(e) {
-    var rect = canvas.getBoundingClientRect(); if (String(style) !== "line" && String(style) !== "rectangle" && String(style) !== "ellipse") {
+  if (e.touches.length > 1) {
+    return true;
+  }
+  else {
+    var touch = e.touches[0];
+    var mouseEvent = new MouseEvent("mousemove", {
+      clientX: touch.clientX,
+      clientY: touch.clientY
+    });
+    stuff.dispatchEvent(mouseEvent);
+    e.preventDefault();
+  }
+}, false);
+var timer;
+canvas.onmousedown = function(e) {
+  var rect = canvas.getBoundingClientRect();
+  if (String(style) !== "line" && String(style) !== "rectangle" && String(style) !== "ellipse") {
     mouse.pos.x = e.clientX - rect.left;
     mouse.pos.y = e.clientY - rect.top;
-    clearTimeout(timer); timer = setTimeout(function() {mouse.click = true;}, 0);
-  } else { if (mouse.pos_prev.x == undefined && mouse.pos_prev.y == undefined){
-    mouse.pos_prev.x = e.clientX - rect.left;
-    mouse.pos_prev.y = e.clientY - rect.top; mouse.pos.x = undefined; mouse.pos.y = undefined; return;}
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+      mouse.click = true;
+    }, 0);
+  }
+  else {
+    if (mouse.pos_prev.x == undefined && mouse.pos_prev.y == undefined){
+      mouse.pos_prev.x = e.clientX - rect.left;
+      mouse.pos_prev.y = e.clientY - rect.top;
+      mouse.pos.x = undefined;
+      mouse.pos.y = undefined;
+      return;
+    }
     else if ((!mouse.pos.x) && (!mouse.pos.y)) {
-    mouse.pos.x = e.clientX - rect.left;
-    mouse.pos.y = e.clientY - rect.top; mouse.click = true; setTimeout( function() {mouse.pos.y = undefined; mouse.pos.x = undefined; mouse.pos_prev.x = undefined; mouse.pos_prev.y = undefined; mouse.click = false;}, 25)
-    }}};
-  
-  canvas.onmouseup = function(e) { if (String(style) !== "line" && String(style) !== "rectangle" && String(style) !== "ellipse") {
+      mouse.pos.x = e.clientX - rect.left;
+      mouse.pos.y = e.clientY - rect.top;
+      mouse.click = true;
+      setTimeout(function() {
+        mouse.pos.y = undefined;
+        mouse.pos.x = undefined;
+        mouse.pos_prev.x = undefined;
+        mouse.pos_prev.y = undefined;
+        mouse.click = false;
+      }, 25)
+    }
+  }
+};
+
+canvas.onmouseup = function(e) {
+  if (String(style) !== "line" && String(style) !== "rectangle" && String(style) !== "ellipse") {
     mouse.click = false;
     mouse.pos_prev.x = undefined;
     mouse.pos_prev.y = undefined;
-  }};
+  }
+};
 
-  canvas.onmousemove = function(e) { if (String(style) !== "line" && String(style) !== "rectangle" && String(style) !== "ellipse") {
-   var rect = canvas.getBoundingClientRect(); 
-    mouse.pos.x = e.clientX - rect.left;
-    mouse.pos.y = e.clientY - rect.top;
-    mouse.move = true;
-  }};
+canvas.onmousemove = function(e) {
+  if (String(style) !== "line" && String(style) !== "rectangle" && String(style) !== "ellipse") {
+   var rect = canvas.getBoundingClientRect();
+   mouse.pos.x = e.clientX - rect.left;
+  mouse.pos.y = e.clientY - rect.top;
+  mouse.move = true;
+  }
+};
 
-  socket.on("image", function(image){
-    var img=new Image();  
-    img.onload=start;
-    img.src=image;
-      function start(){
-        context.drawImage(img,0,0)
-        };
-      socket.emit("image_recieved"); 
-      });
+socket.on("image", function(image){
+  var img=new Image();
+  img.onload=start;
+  img.src=image;
+  function start(){
+    context.drawImage(img,0,0)
+  };
+  socket.emit("image_recieved");
+  });
+
 socket.on("draw_line", function draw(data) {
-    var line = data.line;
-    if (String(line[4]) == "square" || String(line[4]) == "round" || String(line[4]) == "butt"){ if ((line[1].x) && (line[1].y)) {
-    context.beginPath();
-    context.lineCap = String(line[4]);
-    context.lineJoin = "round";
-    context.lineWidth = line[3];
-    context.strokeStyle = line[2];
-    context.moveTo(line[0].x, line[0].y);
-    context.lineTo(line[1].x, line[1].y);
-    context.stroke();
-} else if (line[3] > 1){
-    context.beginPath();
-    context.lineCap = String(line[4]);
-    context.lineJoin = "round";
-    context.lineWidth = line[3];
-    context.strokeStyle = line[2];
-    context.moveTo(line[0].x, line[0].y);
-    context.lineTo(line[0].x, line[0].y + .01);
-    context.stroke();
-
-  } else 
-{
-context.fillStyle = line[2];
-context.fillRect(line[0].x,line[0].y,1,1); }} else if (String(line[4]) == "spray"){
   var line = data.line;
-  context.lineWidth = line[3];
-  var radius = context.lineWidth / 2;
-  var area = radius * radius * Math.PI;
-  var dotsPerTick = Math.ceil(area / 30);
-  var currentPos = line[0];
-  function spray3 () {
-    for (var i = 0; i < dotsPerTick; i++) {
-      var offset = randomPointInRadius(radius);
-      context.fillStyle = line[2]
-      context.fillRect(currentPos.x + offset.x,
-                  currentPos.y + offset.y, 1, 1);
+  if (String(line[4]) == "square" || String(line[4]) == "round" || String(line[4]) == "butt"){
+    if ((line[1].x) && (line[1].y)) {
+      context.beginPath();
+      context.lineCap = String(line[4]);
+      context.lineJoin = "round";
+      context.lineWidth = line[3];
+      context.strokeStyle = line[2];
+      context.moveTo(line[0].x, line[0].y);
+      context.lineTo(line[1].x, line[1].y);
+      context.stroke();
     }
-  }; spray3();
-} else if (line[4] == "line"){
-  context.beginPath();
-  context.strokeStyle = line[2];
-  context.lineWidth = line[3];
-  context.lineCap = "butt"
-  context.moveTo(line[1].x, line[1].y);
+    else if (line[3] > 1) {
+      context.beginPath();
+      context.lineCap = String(line[4]);
+      context.lineJoin = "round";
+      context.lineWidth = line[3];
+      context.strokeStyle = line[2];
+      context.moveTo(line[0].x, line[0].y);
+      context.lineTo(line[0].x, line[0].y + .01);
+      context.stroke();
+    }
+    else {
+      context.fillStyle = line[2];
+      context.fillRect(line[0].x,line[0].y,1,1);
+    }
+  }
+  else if (String(line[4]) == "spray"){
+    var line = data.line;
+    context.lineWidth = line[3];
+    var radius = context.lineWidth / 2;
+    var area = radius * radius * Math.PI;
+    var dotsPerTick = Math.ceil(area / 30);
+    var currentPos = line[0];
+    function spray3 () {
+      for (var i = 0; i < dotsPerTick; i++) {
+        var offset = randomPointInRadius(radius);
+        context.fillStyle = line[2]
+        context.fillRect(currentPos.x + offset.x, currentPos.y + offset.y, 1, 1);
+      }
+    };
+    spray3();
+  }
+  else if (line[4] == "line"){
+    context.beginPath();
+    context.strokeStyle = line[2];
+    context.lineWidth = line[3];
+    context.lineCap = "butt"
+    context.moveTo(line[1].x, line[1].y);
     context.lineTo(line[0].x, line[0].y);
-     context.stroke();
-} else if (line[4] == "rectangle")
-{   context.strokeStyle = line[2];
-  context.lineWidth = line[3];
-  context.lineJoin = "miter";
-  context.strokeRect(line[1].x,line[1].y,line[0].x - line[1].x,line[0].y - line[1].y);
-
-}
-else if (line[4] == "ellipse"){
-  context.beginPath();
-  context.strokeStyle = line[2];
-  context.lineWidth = line[3];
-  ellipse((line[1].x + line[0].x)/2,(line[1].y + line[0].y)/2,line[0].x - line[1].x, line[0].y - line[1].y);
-} else if (line[4] == "fill"){ 
-var rgb2 = line[2].replace(/[^\d,]/g, '').split(','); var rgba = [Number(rgb2[0]), Number(rgb2[1]), Number(rgb2[2]), 255]; floodFillLinear(canvas, line[0].x, line[0].y, rgba, 40);
-}
-})
+    context.stroke();
+  }
+  else if (line[4] == "rectangle") {
+    context.strokeStyle = line[2];
+    context.lineWidth = line[3];
+    context.lineJoin = "miter";
+    context.strokeRect(line[1].x,line[1].y,line[0].x - line[1].x,line[0].y - line[1].y);
+  }
+  else if (line[4] == "ellipse"){
+    context.beginPath();
+    context.strokeStyle = line[2];
+    context.lineWidth = line[3];
+    ellipse((line[1].x + line[0].x)/2,(line[1].y + line[0].y)/2,line[0].x - line[1].x, line[0].y - line[1].y);
+  }
+  else if (line[4] == "fill"){
+    var rgb2 = line[2].replace(/[^\d,]/g, '').split(',');
+    var rgba = [Number(rgb2[0]), Number(rgb2[1]), Number(rgb2[2]), 255];
+    floodFillLinear(canvas, line[0].x, line[0].y, rgba, 60);
+  }
+});
 
 function floodFillLinear(canvas, x, y, fillColor, tolerance) {
 	/**
@@ -200,10 +260,6 @@ function floodFillLinear(canvas, x, y, fillColor, tolerance) {
 	var startIdx = (width * y + x) * 4;
 	var startColor = [ pixelData.data[startIdx], pixelData.data[startIdx + 1],
 			pixelData.data[startIdx + 2], pixelData.data[startIdx + 3] ];
-	if (startColor[0] == 0 && startColor[1] == 0 && startColor[2] == 0
-			&& startColor[3] == 255) {
-		return;
-	}
 	var ranges = new Queue();
 
 	/**
@@ -345,7 +401,7 @@ Queue.prototype = {
 
 };
 
-function ellipse(cx, cy, w, h){      
+function ellipse(cx, cy, w, h){
     var ctx = canvas.getContext('2d');
     var lx = cx - w/2,
         rx = cx + w/2,
@@ -384,21 +440,29 @@ function getPixelColor(x, y) {
         drawOnCanvas();
         socket2.emit('update_coords', pos);
     }
-  
-  
-  function drawLoop() {
-    if ((mouse.click) && (style == "square" || style == "round" || style == "spray" || style == "butt" || style == "line" || style == "rectangle" || style == "ellipse" || style == "fill")){
-      socket.emit("draw_line", { line: [mouse.pos, mouse.pos_prev, cl, dwidth, style] });
-      mouse.move = false;
-    } else if (mouse.click && style == "color-select") {getPixelColor(mouse.pos.x, mouse.pos.y)}
-    
-    if (mouse.click && String(style) !== "line" && String(style) !== "rectangle" && String(style) !== "ellipse") {mouse.pos_prev.x = mouse.pos.x; mouse.pos_prev.y = mouse.pos.y;}
-    setTimeout(drawLoop, 25);
+
+
+function drawLoop() {
+  if ((mouse.click) && (style == "square" || style == "round" || style == "spray" ||
+  style == "butt" || style == "line" || style == "rectangle" || style == "ellipse" || style == "fill")){
+    socket.emit("draw_line", {
+      line: [mouse.pos, mouse.pos_prev, cl, dwidth, style]
+    });
+    mouse.move = false;
   }
-  
-  drawLoop();
-  context.fillStyle = 'rgb(255,255,255)';
-    context.beginPath();
-    context.fillRect(0, 0, drawboard.width, drawboard.height);
-    context.closePath();
-    context.fill();
+  else if (mouse.click && style == "color-select") {
+    getPixelColor(mouse.pos.x, mouse.pos.y)
+  };
+  if (mouse.click && String(style) !== "line" && String(style) !== "rectangle" && String(style) !== "ellipse") {
+    mouse.pos_prev.x = mouse.pos.x;
+    mouse.pos_prev.y = mouse.pos.y;
+  }
+  setTimeout(drawLoop, 25);
+}
+
+drawLoop();
+context.fillStyle = 'rgb(255,255,255)';
+context.beginPath();
+context.fillRect(0, 0, drawboard.width, drawboard.height);
+context.closePath();
+context.fill();
