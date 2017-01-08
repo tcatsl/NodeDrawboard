@@ -9,7 +9,10 @@ $('#styles input').on('change', function() {
   style = String($('input[name=style]:checked', '#styles').val());
   });
 document.getElementById("styles").onclick = function (){
-  mouse.pos.y = undefined; mouse.pos.x = undefined; mouse.pos_prev.x = undefined; mouse.pos_prev.y = undefined;
+  mouse.pos.y = undefined; 
+  mouse.pos.x = undefined; 
+  mouse.pos_prev.x = undefined; 
+  mouse.pos_prev.y = undefined;
 };
 var dwidth = 2;
 var canvas = document.getElementById("drawboard");
@@ -150,6 +153,14 @@ canvas.onmousedown = function(e) {
 };
 
 canvas.onmouseup = function(e) {
+  if (String(style) !== "line" && String(style) !== "rectangle" && String(style) !== "ellipse") {
+    mouse.click = false;
+    mouse.pos_prev.x = undefined;
+    mouse.pos_prev.y = undefined;
+  }
+};
+
+document.onmouseup = function(e) {
   if (String(style) !== "line" && String(style) !== "rectangle" && String(style) !== "ellipse") {
     mouse.click = false;
     mouse.pos_prev.x = undefined;
@@ -428,19 +439,18 @@ function randomPointInRadius(radius) {
 }
 
 function getPixelColor(x, y) {
-        var pxData = context.getImageData(x,y,1,1);
-        $("#slider-1").slider('value',pxData.data[0]);
-        $("#slider-2").slider('value',pxData.data[1]);
-        $("#slider-3").slider('value',pxData.data[2]);
-        r = pxData.data[0];
-        g = pxData.data[1];
-        b = pxData.data[2];
-        cl = 'rgb('+r+','+g+','+b+')';
-        pos.color = cl
-        drawOnCanvas();
-        socket2.emit('update_coords', pos);
-    }
-
+  var pxData = context.getImageData(x,y,1,1);
+  $("#slider-1").slider('value',pxData.data[0]);
+  $("#slider-2").slider('value',pxData.data[1]);
+  $("#slider-3").slider('value',pxData.data[2]);
+  r = pxData.data[0];
+  g = pxData.data[1];
+  b = pxData.data[2];
+  cl = 'rgb('+r+','+g+','+b+')';
+  pos.color = cl;
+  drawOnCanvas();
+  socket2.emit('update_coords', pos);
+}
 
 function drawLoop() {
   if ((mouse.click) && (style == "square" || style == "round" || style == "spray" ||
